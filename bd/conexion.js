@@ -1,7 +1,7 @@
 const { Pool } = require("pg");
 
 // Cargar las variables de entorno
-require("dotenv").config();
+//require("dotenv").config();
 
 const proConfig = {
   connectionString: process.env.DATABASE_URL,
