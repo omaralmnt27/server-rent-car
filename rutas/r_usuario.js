@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     console.error(err.message);
     res.status(500).send("Error en el servidor");
   }
-});
+}
 
 router.post('/', async (req, res) => {
   const { usuario, clave } = req.body;
