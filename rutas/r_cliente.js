@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { insertCliente } = require('../bd/tablas/cliente');
-const { post, get, put } = require('./r_usuario');
 
 
 router.post('/', async (req, res) => {
@@ -21,4 +20,4 @@ router.post('/', async (req, res) => {
     }
     
 });
-  
+module.exports = router;

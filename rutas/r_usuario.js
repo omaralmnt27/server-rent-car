@@ -28,7 +28,6 @@ router.post('/login', async (req, res) => {
   console.log('Credenciales recibidas:', usuario, clave); // Muestra las credenciales recibidas
 
   try {
-    // Llama a la función de validación
     const validUserCount = await ValidarUsuario(usuario, clave); 
     console.log('Cantidad de usuarios válidos encontrados:', validUserCount); // Registra el conteo de usuarios válidos
 
