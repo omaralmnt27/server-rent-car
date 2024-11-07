@@ -1,17 +1,24 @@
 const pool = require('../conexion');
 
-const insertCliente = async (usuario, clave) => {
+const insertCliente = async (nombre, apellido, fecha_nacimiento, sexo, tipo_entidad) => {
     try {
-      const result = await pool.query('INSERT INTO usuario (usuario, clave) VALUES ($1, $2)', [usuario, clave]);
-      return result.rowCount;
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  };
+        const q_entidad = await pool.query('INSERT INTO entidad (tipo_entidad) VALUES ($1) RETURNING id_entidad', [tipo_entidad]);
+        const entidadId = q_entidad.rows[0].id_entidad;
 
-  module.exports = {
-    InsertCliente,
-  
-  };
-  
+        const q_persona = await pool.query(
+            'INSERT INTO persona (nombre, apellido, fecha_nacimiento, sexo, id_entidad) VALUES ($1, $2, $3, $4, $5) RETURNING id_persona',
+            [nombre, apellido, fecha_nacimiento, sexo, entidadId]
+        );
+
+        const q_cliente = await pool.query(' INSERT INTO cliente (id_entidad) VALUES ($1)',[entidadId]);
+        
+        return q_cliente.rowCount;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+module.exports = {
+    insertCliente
+};
