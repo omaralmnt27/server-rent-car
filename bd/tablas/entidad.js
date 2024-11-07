@@ -1,6 +1,6 @@
 const pool = require('../conexion');
 
-const getTipoCliente = async (req, res) => {
+const getTipoEntidad = async (req, res) => {
   try {
     const result = await pool.query('SELECT id_tipo_entidad AS id, descripcion FROM tipo_entidad');
     res.status(200).json(result.rows); 
@@ -11,5 +11,5 @@ const getTipoCliente = async (req, res) => {
 };
 
 module.exports = {
-  getTipoCliente
+    getTipoEntidad
 };
