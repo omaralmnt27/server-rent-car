@@ -15,6 +15,7 @@ if(process.env.NODE_ENV === "production"){
 
 app.use('/usuarios', usuariosRoutes);
 app.use('/clientes', clientesRoutes);
+app.use('/entidades', clientesRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
