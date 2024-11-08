@@ -1,12 +1,12 @@
 const pool = require('../conexion');
 
 // Función para insertar un cliente
-const insertCliente = async (nombre, apellido, fecha_nacimiento, sexo, tipo_entidad) => {
+const insertCliente = async (nombre, apellido, fecha_nacimiento, sexo, id_tipo_entidad) => {
     try {
         // Paso 1: Insertar en la tabla `entidad`
         const q_entidad = await pool.query(
             'INSERT INTO entidad (id_tipo_entidad) VALUES ($1) RETURNING id_entidad',
-            [tipo_entidad]
+            [id_tipo_entidad]
         );
         const entidadId = q_entidad.rows[0].id_entidad;
 

@@ -5,7 +5,7 @@ const { insertCliente, insertTelefonos, insertDocumentos, insertDirecciones } = 
 // Ruta para registrar cliente
 router.post('/', async (req, res) => {
     // Extraer los datos del cuerpo de la solicitud
-    const { tipo_cliente, nombre, apellido, fecha_nacimiento, sexo, nombre_empresa, telefonos, documentos, direcciones } = req.body;
+    const { tipo_cliente, nombre, apellido, fecha_nacimiento, sexo, nombre_empresa, telefonos, documentos, direcciones,id_tipo_entidad } = req.body;
     console.log(req.body)
     try {
         // Validar los datos antes de realizar inserciones
@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
 
         // Llama a la función insertCliente dependiendo del tipo de cliente
         const clienteId = await insertCliente({
-            tipo_cliente,
+            id_tipo_entidad,
             nombre,
             apellido,
             fecha_nacimiento,
