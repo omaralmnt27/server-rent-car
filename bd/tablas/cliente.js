@@ -2,7 +2,7 @@ const pool = require('../conexion');
 
 const insertCliente = async (nombre, apellido, fecha_nacimiento, sexo, tipo_entidad) => {
     try {
-        const q_entidad = await pool.query('INSERT INTO entidad (tipo_entidad) VALUES ($1) RETURNING id_entidad', [tipo_entidad]);
+        const q_entidad = await pool.query('INSERT INTO entidad (id_tipo_entidad) VALUES ($1) RETURNING id_entidad', [tipo_entidad]);
         const entidadId = q_entidad.rows[0].id_entidad;
 
         const q_persona = await pool.query(
