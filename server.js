@@ -11,7 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 4000; // Puerto en el que el servidor escuchará
 app.use(express.json());
 
-app.options('*', cors());
+app.options('*',cors());
 
 if(process.env.NODE_ENV === "production"){
 
