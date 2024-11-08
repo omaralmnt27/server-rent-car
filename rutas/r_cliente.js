@@ -6,7 +6,7 @@ const { insertCliente, insertTelefonos, insertDocumentos, insertDirecciones } = 
 router.post('/', async (req, res) => {
     // Extraer los datos del cuerpo de la solicitud
     const { tipo_cliente, nombre, apellido, fecha_nacimiento, sexo, nombre_empresa, telefonos, documentos, direcciones } = req.body;
-
+    console.log(req.body)
     try {
         // Validar los datos antes de realizar inserciones
         if (!tipo_cliente) {
