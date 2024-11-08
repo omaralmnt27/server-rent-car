@@ -6,7 +6,7 @@ const insertCliente = async (nombre, apellido, fecha_nacimiento, sexo, id_tipo_e
         // Paso 1: Insertar en la tabla `entidad`
         const q_entidad = await pool.query(
             'INSERT INTO entidad (id_tipo_entidad) VALUES ($1) RETURNING id_entidad',
-            [id_tipo_entidad]
+            [1]
         );
         const entidadId = q_entidad.rows[0].id_entidad;
 
