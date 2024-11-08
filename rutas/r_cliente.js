@@ -1,30 +1,43 @@
 const express = require('express');
 const router = express.Router();
-const { insertCliente } = require('../bd/tablas/cliente');
+const { insertCliente, insertTelefonos, insertDocumentos, insertDirecciones } = require('../bd/tablas/cliente');
 
 // Ruta para registrar cliente
 router.post('/', async (req, res) => {
-    // Agrega encabezados CORS a la respuesta
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-
-    // Extrae los datos del cuerpo de la solicitud
-    const { nombre, apellido, fecha_nacimiento, sexo } = req.body; 
-    console.log('Variables recibidas:', nombre, apellido, fecha_nacimiento, sexo);
+    const { tipo_cliente, nombre, apellido, fecha_nacimiento, sexo, nombre_empresa, telefonos, documentos, direcciones } = req.body;
 
     try {
-        // Llama a la función insertCliente con los datos recibidos
-        const resultado = await insertCliente(nombre, apellido, fecha_nacimiento, sexo, 1);
-        
-        if (resultado > 0) {
+        // Llama a la función insertCliente dependiendo del tipo de cliente
+        const clienteId = await insertCliente({
+            tipo_cliente,
+            nombre,
+            apellido,
+            fecha_nacimiento,
+            sexo,
+            nombre_empresa
+        });
+
+        if (clienteId > 0) {
+            console.log(`Cliente registrado con ID: ${clienteId}`);
+
+            if (Array.isArray(telefonos) && telefonos.length > 0) {
+                await insertTelefonos(clienteId, telefonos);
+            }
+
+            if (Array.isArray(documentos) && documentos.length > 0) {
+                await insertDocumentos(clienteId, documentos);
+            }
+
+            if (Array.isArray(direcciones) && direcciones.length > 0) {
+                await insertDirecciones(clienteId, direcciones);
+            }
+
             return res.status(200).json({ message: 'Cliente registrado correctamente' });
         } else {
             return res.status(401).json({ error: 'No se pudo registrar el cliente' });
         }
     } catch (error) {
         console.error("Error al registrar cliente:", error);
-        // Corrige el manejo de errores aquí
         return res.status(500).json({ error: `Error en el servidor: ${error.message}` });
     }
 });
