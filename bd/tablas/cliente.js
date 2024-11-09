@@ -30,7 +30,7 @@ const insertCliente = async (nombre, apellido, fecha_nacimiento, sexo, id_tipo_e
 
 // Función para insertar teléfonos
 const insertTelefonos = async (entidadId, telefonos) => {
-    const query = 'INSERT INTO telefono (id_entidad, id_tipo_telefono, numero) VALUES ($1, $2, $3)';
+    const query = 'INSERT INTO telefono (id_entidad, id_tipo_telefono, telefono) VALUES ($1, $2, $3)';
     try {
         for (const telefono of telefonos) {
             await pool.query(query, [entidadId, telefono.tipo.id, telefono.numero]);
