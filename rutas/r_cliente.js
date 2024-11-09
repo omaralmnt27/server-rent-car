@@ -22,15 +22,15 @@ router.post('/', async (req, res) => {
         }
 
         // Llama a la función insertCliente pasando cada parámetro individualmente
-        const clienteId = await insertCliente(nombre, apellido, fecha_nacimiento, sexo, id_tipo_entidad);
+        const entidadId = await insertCliente(nombre, apellido, fecha_nacimiento, sexo, id_tipo_entidad);
 
-        if (clienteId > 0) {
-            console.log(`Cliente registrado con ID: ${clienteId}`);
+        if (personaId > 0) {
+            console.log(`Cliente registrado con ID: ${entidadId}`);
 
             // Inserta los teléfonos asociados, si existen
             if (Array.isArray(telefonos) && telefonos.length > 0) {
                 try {
-                    await insertTelefonos(clienteId, telefonos);
+                    await insertTelefonos(entidadId, telefonos);
                     console.log('Teléfonos registrados correctamente');
                 } catch (error) {
                     console.error("Error al registrar teléfonos:", error);
