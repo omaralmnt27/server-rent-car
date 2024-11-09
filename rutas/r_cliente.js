@@ -7,7 +7,6 @@ router.post('/', async (req, res) => {
     // Extraer los datos del cuerpo de la solicitud
     const { tipo_cliente, nombre, apellido, fecha_nacimiento, sexo, nombre_empresa, telefonos, documentos, direcciones,id_tipo_entidad } = req.body;
     console.log(req.body)
-    console.log('-------------------------------------------------------', id_tipo_entidad)
     try {
         // Validar los datos antes de realizar inserciones
         if (!tipo_cliente) {
@@ -22,12 +21,12 @@ router.post('/', async (req, res) => {
 
         // Llama a la función insertCliente dependiendo del tipo de cliente
         const clienteId = await insertCliente({
-            id_tipo_entidad,
             nombre,
             apellido,
             fecha_nacimiento,
             sexo,
-            nombre_empresa
+            nombre_empresa,
+            id_tipo_entidad
         });
 
         if (clienteId > 0) {
