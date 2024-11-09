@@ -7,7 +7,6 @@ router.post('/', async (req, res) => {
     // Extraer los datos del cuerpo de la solicitud
     const { tipo_cliente, nombre, apellido, fecha_nacimiento, sexo, nombre_empresa, telefonos, documentos, direcciones,id_tipo_entidad } = req.body;
     console.log(req.body)
-    console.log('ENTIDAD ENTIDAD ENTIDAD',id_tipo_entidad)
     try {
         // Validar los datos antes de realizar inserciones
         if (!tipo_cliente) {
@@ -19,6 +18,8 @@ router.post('/', async (req, res) => {
         if (tipo_cliente === 'empresa' && !nombre_empresa) {
             return res.status(400).json({ error: 'El nombre de la empresa es requerido para el cliente de tipo empresa' });
         }
+        console.log('ENTIDAD ENTIDAD ENTIDAD',id_tipo_entidad)
+
         const clienteId = await insertCliente({
             nombre,
             apellido,
