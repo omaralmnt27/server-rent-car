@@ -19,7 +19,7 @@ const insertCliente = async (nombre, apellido, fecha_nacimiento, sexo, id_tipo_e
         const personaId = q_persona.rows[0].id_persona;
 
         // Paso 3: Insertar en la tabla `cliente` usando el `id_persona`
-        await pool.query('INSERT INTO cliente (id_persona) VALUES ($1)', [personaId]);
+        await pool.query('INSERT INTO cliente (id_entidad) VALUES ($1)', [entidadId]);
 
         return personaId; // Devuelve el `id_persona`
     } catch (err) {
