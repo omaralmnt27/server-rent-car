@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
         if (tipo_cliente === 'empresa' && !nombre_empresa) {
             return res.status(400).json({ error: 'El nombre de la empresa es requerido para el cliente de tipo empresa' });
         }
-
+        console.log('ID ENTIDAD REG'. id_tipo_entidad)
         // Llama a la función insertCliente dependiendo del tipo de cliente
         const clienteId = await insertCliente({
             nombre,
