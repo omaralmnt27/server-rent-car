@@ -2,6 +2,7 @@ const pool = require('../conexion');
 
 // Función para insertar un cliente
 const insertCliente = async (nombre, apellido, fecha_nacimiento, sexo, id_tipo_entidad) => {
+    console.log('no limit fuck claudia',id_tipo_entidad)
     try {
         // Paso 1: Insertar en la tabla `entidad`
         const q_entidad = await pool.query(
