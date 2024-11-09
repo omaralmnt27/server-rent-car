@@ -16,6 +16,8 @@ app.use(express.json());
 
 app.use(cors())
 app.options('*',cors());
+app.use(express.json());
+app.use('/api', estadosRoutes);
 
 if(process.env.NODE_ENV === "production"){
 
