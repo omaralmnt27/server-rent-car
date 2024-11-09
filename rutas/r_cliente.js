@@ -5,8 +5,10 @@ const { insertCliente, insertTelefonos, insertDocumentos, insertDirecciones } = 
 // Ruta para registrar cliente
 router.post('/', async (req, res) => {
     // Extraer los datos del cuerpo de la solicitud
-    const { tipo_cliente, nombre, apellido, fecha_nacimiento, sexo, nombre_empresa, telefonos, documentos, direcciones,id_tipo_entidad } = req.body;
-    console.log(req.body)
+    const { tipo_cliente, nombre, apellido, fecha_nacimiento, sexo, nombre_empresa, telefonos, documentos, direcciones, id_tipo_entidad } = req.body;
+
+    console.log("Datos recibidos en el servidor:", req.body);
+
     try {
         // Validar los datos antes de realizar inserciones
         if (!tipo_cliente) {
@@ -19,14 +21,8 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: 'El nombre de la empresa es requerido para el cliente de tipo empresa' });
         }
 
-        const clienteId = await insertCliente({
-            nombre,
-            apellido,
-            fecha_nacimiento,
-            sexo,
-            nombre_empresa,
-            id_tipo_entidad
-        });
+        // Llama a la función insertCliente pasando cada parámetro individualmente
+        const clienteId = await insertCliente(nombre, apellido, fecha_nacimiento, sexo, id_tipo_entidad);
 
         if (clienteId > 0) {
             console.log(`Cliente registrado con ID: ${clienteId}`);
@@ -38,7 +34,6 @@ router.post('/', async (req, res) => {
                     console.log('Teléfonos registrados correctamente');
                 } catch (error) {
                     console.error("Error al registrar teléfonos:", error);
-                    // Aquí puedes decidir si quieres abortar toda la operación o continuar
                     return res.status(500).json({ error: 'Error al registrar teléfonos' });
                 }
             }
