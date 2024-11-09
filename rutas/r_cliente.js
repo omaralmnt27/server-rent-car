@@ -7,6 +7,7 @@ router.post('/', async (req, res) => {
     // Extraer los datos del cuerpo de la solicitud
     const { tipo_cliente, nombre, apellido, fecha_nacimiento, sexo, nombre_empresa, telefonos, documentos, direcciones,id_tipo_entidad } = req.body;
     console.log(req.body)
+    console.log('-------------------------------------------------------', id_tipo_entidad)
     try {
         // Validar los datos antes de realizar inserciones
         if (!tipo_cliente) {
