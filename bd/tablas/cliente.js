@@ -16,24 +16,24 @@ const insertCliente = async (nombre, apellido, fecha_nacimiento, sexo, id_tipo_e
             'INSERT INTO persona (nombre, apellido, fecha_nacimiento, sexo, id_entidad) VALUES ($1, $2, $3, $4, $5) RETURNING id_persona',
             [nombre, apellido, fecha_nacimiento, sexo, entidadId]
         );
-        const personaId = q_persona.rows[0].id_persona;
 
         // Paso 3: Insertar en la tabla `cliente` usando el `id_persona`
         await pool.query('INSERT INTO cliente (id_entidad) VALUES ($1)', [entidadId]);
 
-        return personaId; // Devuelve el `id_persona`
+        return entidadId; // Devuelve el `id_persona`
     } catch (err) {
-        console.error('------------------------*****',id_tipo_entidad);
         throw err;
     }
 };
 
+
+
 // Función para insertar teléfonos
-const insertTelefonos = async (personaId, telefonos) => {
-    const query = 'INSERT INTO telefono (id_persona, tipo, numero) VALUES ($1, $2, $3)';
+const insertTelefonos = async (entidadId, telefonos) => {
+    const query = 'INSERT INTO telefono (id_entidad, tipo, numero) VALUES ($1, $2, $3)';
     try {
         for (const telefono of telefonos) {
-            await pool.query(query, [personaId, telefono.tipo, telefono.numero]);
+            await pool.query(query, [entidadId, telefono.tipo, telefono.numero]);
         }
     } catch (err) {
         console.error("Error al insertar teléfonos:", err);
