@@ -1,31 +1,92 @@
 const pool = require('../conexion');
 
-// Función para insertar un cliente
-const insertCliente = async (nombre, apellido, fecha_nacimiento, sexo, id_tipo_entidad) => {
-    console.log('no limit fuck claudia',id_tipo_entidad)
+const insertDatosAdicionales = async (entidadId, telefonos, documentos, direcciones) => {
     try {
-        // Paso 1: Insertar en la tabla `entidad`
-        const q_entidad = await pool.query(
-            'INSERT INTO entidad (id_tipo_entidad) VALUES ($1) RETURNING id_entidad',
-            [id_tipo_entidad]
-        );
-        const entidadId = q_entidad.rows[0].id_entidad;
+        // Insertar teléfonos
+        if (Array.isArray(telefonos) && telefonos.length > 0) {
+            for (const telefono of telefonos) {
+                await pool.query(
+                    'INSERT INTO telefono (id_entidad, numero) VALUES ($1, $2)',
+                    [entidadId, telefono]
+                );
+            }
+        }
 
-        // Paso 2: Insertar en la tabla `persona`
-        const q_persona = await pool.query(
-            'INSERT INTO persona (nombre, apellido, fecha_nacimiento, sexo, id_entidad) VALUES ($1, $2, $3, $4, $5) RETURNING id_persona',
-            [nombre, apellido, fecha_nacimiento, sexo, entidadId]
-        );
+        // Insertar documentos
+        if (Array.isArray(documentos) && documentos.length > 0) {
+            for (const doc of documentos) {
+                await pool.query(
+                    'INSERT INTO documento (id_entidad, tipo_documento, numero) VALUES ($1, $2, $3)',
+                    [entidadId, doc.tipo_documento, doc.numero]
+                );
+            }
+        }
 
-        // Paso 3: Insertar en la tabla `cliente` usando el `id_persona`
-        await pool.query('INSERT INTO cliente (id_entidad) VALUES ($1)', [entidadId]);
-
-        return entidadId; // Devuelve el `id_persona`
+        // Insertar direcciones
+        if (Array.isArray(direcciones) && direcciones.length > 0) {
+            for (const dir of direcciones) {
+                await pool.query(
+                    'INSERT INTO direccion (id_entidad, calle, ciudad, estado, pais) VALUES ($1, $2, $3, $4, $5)',
+                    [entidadId, dir.calle, dir.ciudad, dir.estado, dir.pais]
+                );
+            }
+        }
     } catch (err) {
+        console.error("Error al insertar datos adicionales:", err);
         throw err;
     }
 };
 
+// Función para insertar un cliente
+const insertClientePersona = async (nombre, apellido, fecha_nacimiento, sexo, id_tipo_entidad, pais_origen) => {
+    try {
+        // Paso 1: Insertar en la tabla `entidad`
+        const q_entidad = await pool.query(
+            'INSERT INTO entidad (id_tipo_entidad, id_pais) VALUES ($1, $2) RETURNING id_entidad',
+            [id_tipo_entidad, pais_origen || null]
+        );
+        const entidadId = q_entidad.rows[0].id_entidad;
+
+        // Paso 2: Insertar en la tabla `persona`
+        await pool.query(
+            'INSERT INTO persona (nombre, apellido, fecha_nacimiento, sexo, id_entidad) VALUES ($1, $2, $3, $4, $5)',
+            [nombre, apellido, fecha_nacimiento, sexo, entidadId]
+        );
+
+        // Paso 3: Insertar en la tabla `cliente`
+        await pool.query('INSERT INTO cliente (id_entidad) VALUES ($1)', [entidadId]);
+
+        return entidadId;
+    } catch (err) {
+        console.error("Error al registrar cliente persona:", err);
+        throw err;
+    
+    }
+};
+const insertClienteEmpresa = async (nombre_empresa, id_tipo_entidad, pais_origen) => {
+    try {
+        // Paso 1: Insertar en la tabla `entidad`
+        const q_entidad = await pool.query(
+            'INSERT INTO entidad (id_tipo_entidad, id_pais) VALUES ($1, $2) RETURNING id_entidad',
+            [id_tipo_entidad, pais_origen || null]
+        );
+        const entidadId = q_entidad.rows[0].id_entidad;
+
+        // Paso 2: Insertar en la tabla `empresa`
+        await pool.query(
+            'INSERT INTO empresa (nombre_empresa, id_entidad) VALUES ($1, $2)',
+            [nombre_empresa, entidadId]
+        );
+
+        // Paso 3: Insertar en la tabla `cliente`
+        await pool.query('INSERT INTO cliente (id_entidad) VALUES ($1)', [entidadId]);
+
+        return entidadId;
+    } catch (err) {
+        console.error("Error al registrar cliente empresa:", err);
+        throw err;
+    }
+};
 
 
 // Función para insertar teléfonos
@@ -147,4 +208,7 @@ module.exports = {
     insertDocumentos,
     insertDirecciones,
     getClientes,
+    insertClienteEmpresa,
+    insertDatosAdicionales,
+    insertClientePersona
 };
