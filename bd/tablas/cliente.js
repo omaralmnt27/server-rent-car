@@ -76,7 +76,8 @@ const getClientes = async () => {
           p.nombre,
           p.apellido,
           p.fecha_nacimiento,
-          json_agg(DISTINCT t.*) AS telefonos
+          -- Concatenar todos los números de teléfono en una sola cadena
+          COALESCE(string_agg(DISTINCT t.valor, ', '), '-') AS telefonos
         FROM entidad e
         INNER JOIN persona p ON p.id_entidad = e.id_entidad
         LEFT JOIN telefono t ON t.id_entidad = e.id_entidad
