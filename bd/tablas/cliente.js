@@ -178,7 +178,7 @@ const getClientes = async () => {
         '-') AS documentos
 
 FROM entidad e
-INNER JOIN pais pa ON pa.id_pais = e.id_pais
+LEFT JOIN pais pa ON pa.id_pais = e.id_pais
 INNER JOIN cliente c ON c.id_entidad = e.id_entidad
 INNER JOIN persona p ON p.id_entidad = e.id_entidad
 LEFT JOIN telefono t ON t.id_entidad = e.id_entidad
