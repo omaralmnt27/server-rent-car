@@ -93,19 +93,34 @@ const insertDirecciones = async (entidadId, direcciones) => {
 const getClientes = async () => {
     try {
       const result = await pool.query(`
-        SELECT 
-          e.id_entidad AS id,
-          p.nombre,
-          p.apellido,
-          p.fecha_nacimiento,
-          -- Concatenar todos los números de teléfono junto con el tipo en una sola cadena
-          COALESCE(string_agg(DISTINCT t.telefono || ' (' || tt.descripcion || ')', ', '), '-') AS telefonos
-        FROM entidad e
-        INNER JOIN persona p ON p.id_entidad = e.id_entidad
-        LEFT JOIN telefono t ON t.id_entidad = e.id_entidad
-        LEFT JOIN tipo_telefono tt ON t.id_tipo_telefono = tt.id_tipo_telefono
-        GROUP BY e.id_entidad, p.nombre, p.apellido, p.fecha_nacimiento
-        ORDER BY e.id_entidad;
+      SELECT 
+    e.id_entidad AS id,
+    p.nombre,
+    p.apellido,
+    p.fecha_nacimiento,
+    
+    -- Concatenar todos los números de teléfono junto con su tipo en una sola cadena
+    COALESCE(string_agg(DISTINCT t.telefono || ' (' || tt.descripcion || ')', ', '), '-') AS telefonos,
+
+    -- Concatenar todos los documentos junto con sus fechas y país en una sola cadena
+    COALESCE(string_agg(DISTINCT d.numeracion || ' [Fecha Emisión: ' || d.fecha_emision || ', Fecha Vencimiento: ' || d.fecha_vencimiento || ', País: ' || pais.descripcion || ']', ', '), '-') AS documentos
+
+FROM entidad e
+INNER JOIN persona p ON p.id_entidad = e.id_entidad
+LEFT JOIN telefono t ON t.id_entidad = e.id_entidad
+LEFT JOIN tipo_telefono tt ON t.id_tipo_telefono = tt.id_tipo_telefono
+INNER JOIN documento d ON d.id_entidad = e.id_entidad
+LEFT JOIN pais ON d.id_pais = pais.id_pais
+
+-- Agrupar por los campos de entidad y persona
+GROUP BY 
+    e.id_entidad, 
+    p.nombre, 
+    p.apellido, 
+    p.fecha_nacimiento
+ORDER BY 
+    e.id_entidad;
+
       `);
       return result.rows;
     } catch (error) {
