@@ -159,13 +159,13 @@ const getClientes = async () => {
     p.nombre,
     p.apellido,
     p.fecha_nacimiento,
+    pa.descripcion,
     
-    -- Concatenar todos los números de teléfono junto con su tipo en una sola cadena
+
     COALESCE(
         string_agg(DISTINCT t.telefono || ' (' || tt.descripcion || ')', ', '), 
         '-') AS telefonos,
 
-    -- Concatenar todos los documentos en una cadena simplificada
     COALESCE(
         string_agg(
             DISTINCT d.numeracion || ' (' || 
@@ -177,6 +177,8 @@ const getClientes = async () => {
         '-') AS documentos
 
 FROM entidad e
+INNER JOIN pais pa ON pa.id_pais = e.id_pais
+INNER JOIN cliente c ON c.id_entidad = e.id_entidad
 INNER JOIN persona p ON p.id_entidad = e.id_entidad
 LEFT JOIN telefono t ON t.id_entidad = e.id_entidad
 LEFT JOIN tipo_telefono tt ON t.id_tipo_telefono = tt.id_tipo_telefono
