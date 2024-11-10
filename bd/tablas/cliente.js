@@ -74,7 +74,7 @@ const insertClienteEmpresa = async (nombre_empresa, id_tipo_entidad, pais_origen
 
         // Paso 2: Insertar en la tabla `empresa`
         await pool.query(
-            'INSERT INTO empresa (nombre_empresa, id_entidad) VALUES ($1, $2)',
+            'INSERT INTO empresa (nombre, id_entidad) VALUES ($1, $2)',
             [nombre_empresa, entidadId]
         );
 
@@ -205,7 +205,6 @@ ORDER BY
 
 
 module.exports = {
-    insertCliente,
     insertTelefonos,
     insertDocumentos,
     insertDirecciones,
