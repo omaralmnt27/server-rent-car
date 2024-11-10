@@ -76,11 +76,12 @@ const getClientes = async () => {
           p.nombre,
           p.apellido,
           p.fecha_nacimiento,
-          -- Concatenar todos los números de teléfono en una sola cadena
-          COALESCE(string_agg(DISTINCT t.telefono, ', '), '-') AS telefonos
+          -- Concatenar todos los números de teléfono junto con el tipo en una sola cadena
+          COALESCE(string_agg(DISTINCT t.telefono || ' (' || tt.descripcion || ')', ', '), '-') AS telefonos
         FROM entidad e
         INNER JOIN persona p ON p.id_entidad = e.id_entidad
         LEFT JOIN telefono t ON t.id_entidad = e.id_entidad
+        LEFT JOIN tipo_telefono tt ON t.id_tipo_telefono = tt.id_tipo_telefono
         GROUP BY e.id_entidad, p.nombre, p.apellido, p.fecha_nacimiento
         ORDER BY e.id_entidad;
       `);
@@ -90,6 +91,7 @@ const getClientes = async () => {
       throw error;
     }
   };
+
 
 module.exports = {
     insertCliente,
