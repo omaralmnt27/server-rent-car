@@ -55,11 +55,34 @@ const insertDocumentos = async (entidadId, documentos) => {
 };
 
 // Función para insertar direcciones
+// Función para insertar direcciones
 const insertDirecciones = async (entidadId, direcciones) => {
-    const query = 'INSERT INTO direccion (id_entidad, calle, numero, ciudad, pais, codigo_postal) VALUES ($1, $2, $3, $4, $5, $6)';
+    const direccionQuery = `
+        INSERT INTO direccion (lineauno, lineados, idciudad, idtipo_direccion)
+        VALUES ($1, $2, $3, $4) RETURNING id_direccion
+    `;
+    const entidadDireccionQuery = `
+        INSERT INTO entidad_direccion (id_direccion, id_entidad, id_tipo_direccion_entidad)
+        VALUES ($1, $2, $3)
+    `;
+    
     try {
         for (const direccion of direcciones) {
-            await pool.query(query, [entidadId, direccion.calle, direccion.numero, direccion.ciudad, direccion.pais, direccion.codigo_postal]);
+            // Inserta la dirección en la tabla `direccion`
+            const direccionResult = await pool.query(direccionQuery, [
+                direccion.lineauno,
+                direccion.lineados,
+                direccion.idciudad,
+                direccion.idtipo_direccion
+            ]);
+            const direccionId = direccionResult.rows[0].id_direccion;
+
+            // Inserta la relación en la tabla `entidad_direccion`
+            await pool.query(entidadDireccionQuery, [
+                direccionId,
+                entidadId,
+                direccion.id_tipo_direccion_entidad // Este valor representa el tipo de la dirección (ej. "fiscal", "residencial", etc.)
+            ]);
         }
     } catch (err) {
         console.error("Error al insertar direcciones:", err);
