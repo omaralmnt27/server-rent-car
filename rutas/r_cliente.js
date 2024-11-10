@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { insertCliente, insertEmpresa, insertTelefonos, insertDocumentos, insertDirecciones, getClientes } = require('../bd/tablas/cliente');
+const { insertClientePersona,insertDatosAdicionales, insertClienteEmpresa, insertTelefonos, insertDocumentos, insertDirecciones, getClientes } = require('../bd/tablas/cliente');
 
 // Ruta para registrar cliente
 router.post('/', async (req, res) => {
