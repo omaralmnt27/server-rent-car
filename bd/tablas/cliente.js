@@ -70,27 +70,25 @@ const insertDirecciones = async (entidadId, direcciones) => {
 
 const getClientes = async () => {
     try {
-        const result = await pool.query(`
-            SELECT 
-                e.id_entidad AS id,
-                p.nombre,
-                p.apellido,
-                p.fecha_nacimiento,
-                t.telefono,
-                tt.descripcion
-            FROM entidad e
-            INNER JOIN cliente c ON c.id_entidad = e.id_entidad
-            INNER JOIN persona p ON p.id_entidad = c.id_entidad
-            INNER JOIN telefono t ON t.id_entidad = e.id_entidad
-            INNER JOIN tipo_telefono tt ON t.id_tipo_telefono = tt.id_tipo_telefono
-            ORDER BY e.id_entidad
-        `);
-        return result.rows;
+      const result = await pool.query(`
+        SELECT 
+          e.id_entidad AS id,
+          p.nombre,
+          p.apellido,
+          p.fecha_nacimiento,
+          json_agg(DISTINCT t.*) AS telefonos
+        FROM entidad e
+        INNER JOIN persona p ON p.id_entidad = e.id_entidad
+        LEFT JOIN telefono t ON t.id_entidad = e.id_entidad
+        GROUP BY e.id_entidad, p.nombre, p.apellido, p.fecha_nacimiento
+        ORDER BY e.id_entidad;
+      `);
+      return result.rows;
     } catch (error) {
-        console.error("Error al obtener clientes:", error);
-        throw error;
+      console.error("Error al obtener clientes:", error);
+      throw error;
     }
-};
+  };
 
 module.exports = {
     insertCliente,
