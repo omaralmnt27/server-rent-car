@@ -203,7 +203,6 @@ ORDER BY
 
 
 module.exports = {
-    insertCliente,
     insertTelefonos,
     insertDocumentos,
     insertDirecciones,
