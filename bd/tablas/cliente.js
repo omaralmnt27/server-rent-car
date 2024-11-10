@@ -43,7 +43,7 @@ const insertTelefonos = async (entidadId, telefonos) => {
 
 // Función para insertar documentos
 const insertDocumentos = async (entidadId, documentos) => {
-    const query = 'INSERT INTO documento (id_entidad, id_tipo_documento, numeracion, fecha_emision, fecha_vencimiento,id_pais) VALUES ($1, $2, $3, $4, $5)';
+    const query = 'INSERT INTO documento (id_entidad, id_tipo_documento, numeracion, fecha_emision, fecha_vencimiento,id_pais) VALUES ($1, $2, $3, $4, $5, $6)';
     try {
         for (const doc of documentos) {
             await pool.query(query, [entidadId, doc.tipo.id, doc.valor, doc.fechaEmision, doc.fechaVencimiento,doc.pais]);
