@@ -4,7 +4,6 @@ const { insertCliente, insertTelefonos, insertDocumentos, insertDirecciones, get
 
 // Ruta para registrar cliente
 router.post('/', async (req, res) => {
-    // Extraer los datos del cuerpo de la solicitud
     const {
         tipo_cliente,
         nombre,
@@ -22,49 +21,47 @@ router.post('/', async (req, res) => {
     console.log("Datos recibidos en el servidor:", req.body);
 
     try {
-        // Validar los datos antes de realizar inserciones
+        // Validar datos básicos
         if (!tipo_cliente || !id_tipo_entidad) {
             return res.status(400).json({ error: 'El tipo de cliente y el tipo de entidad son requeridos' });
         }
 
-        // Validación adicional en función del tipo de entidad
-        if (id_tipo_entidad === 1) { // Si es una persona
-            if (tipo_cliente === 'persona' && (!nombre || !apellido || !fecha_nacimiento || !sexo)) {
-                return res.status(400).json({ error: 'Faltan datos requeridos para el cliente de tipo persona' });
-            }
-        } else if (id_tipo_entidad === 2) { // Si es una empresa
-            if (tipo_cliente === 'empresa' && !nombre_empresa) {
-                return res.status(400).json({ error: 'El nombre de la empresa es requerido para el cliente de tipo empresa' });
-            }
-        } else {
-            return res.status(400).json({ error: 'Tipo de entidad no válido' });
+        // Validación en función del tipo de entidad
+        if (id_tipo_entidad === 1 && (!nombre || !apellido || !fecha_nacimiento || !sexo)) {
+            return res.status(400).json({ error: 'Faltan datos requeridos para el cliente de tipo persona' });
+        } else if (id_tipo_entidad === 2 && !nombre_empresa) {
+            return res.status(400).json({ error: 'El nombre de la empresa es requerido para el cliente de tipo empresa' });
         }
 
         let entidadId;
 
         // Insertar según el tipo de entidad
-        if (id_tipo_entidad === 1) { // Insertar en persona
-            entidadId = await insertCliente(nombre, apellido, fecha_nacimiento, sexo, id_tipo_entidad, pais_origen);
-        } else if (id_tipo_entidad === 2) { // Insertar en empresa
-            entidadId = await insertEmpresa(nombre_empresa, id_tipo_entidad, pais_origen);
+        if (id_tipo_entidad === 1) { 
+            entidadId = await insertCliente(
+                nombre, apellido, fecha_nacimiento, sexo, id_tipo_entidad, pais_origen
+            );
+        } else if (id_tipo_entidad === 2) { 
+            entidadId = await insertEmpresa(
+                nombre_empresa, id_tipo_entidad, pais_origen
+            );
         }
 
         if (entidadId > 0) {
             console.log(`Cliente registrado con ID: ${entidadId}`);
 
-            // Inserta los teléfonos asociados, si existen
+            // Inserta los teléfonos
             if (Array.isArray(telefonos) && telefonos.length > 0) {
                 await insertTelefonos(entidadId, telefonos);
                 console.log('Teléfonos registrados correctamente');
             }
 
-            // Inserta los documentos asociados, si existen
+            // Inserta los documentos
             if (Array.isArray(documentos) && documentos.length > 0) {
                 await insertDocumentos(entidadId, documentos);
                 console.log('Documentos registrados correctamente');
             }
 
-            // Inserta las direcciones asociadas, si existen
+            // Inserta las direcciones
             if (Array.isArray(direcciones) && direcciones.length > 0) {
                 await insertDirecciones(entidadId, direcciones);
                 console.log('Direcciones registradas correctamente');
