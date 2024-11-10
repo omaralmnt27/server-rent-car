@@ -46,7 +46,7 @@ const insertDocumentos = async (entidadId, documentos) => {
     const query = 'INSERT INTO documento (id_entidad, id_tipo_documento, numeracion, fecha_emision, fecha_vencimiento) VALUES ($1, $2, $3, $4, $5)';
     try {
         for (const doc of documentos) {
-            await pool.query(query, [entidadId, doc.tipo.id, doc.valor, doc.FechaEmision, doc.FechaVencimiento]);
+            await pool.query(query, [entidadId, doc.tipo.id, doc.valor, doc.fechaEmision, doc.fechaVencimiento]);
         }
     } catch (err) {
         console.error("Error al insertar documentos:", documentos);
