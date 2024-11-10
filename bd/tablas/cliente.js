@@ -75,7 +75,7 @@ const getClientes = async () => {
                 e.id_entidad AS id,
                 p.nombre,
                 p.apellido,
-                p.fecha_nacimiento,
+                p.fecha_nacimiento
             FROM entidad e
             INNER JOIN cliente c ON c.id_entidad = e.id_entidad
             INNER JOIN persona p ON p.id_entidad = c.id_entidad
