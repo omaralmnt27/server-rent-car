@@ -5,7 +5,7 @@ const getEstado = async (req, res) => {
   console.log("ID del país recibido:", idpais);
   try {
     const result = await pool.query(
-      'SELECT idestado AS id, nombre FROM estado WHERE id_pais = $1',
+      'SELECT id_estado AS id, nombre FROM estado WHERE id_pais = $1',
       [idpais]
     );
     res.status(200).json(result.rows);
