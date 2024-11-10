@@ -59,7 +59,7 @@ const insertDocumentos = async (entidadId, documentos) => {
 const insertDirecciones = async (entidadId, direcciones) => {
     const direccionQuery = `
         INSERT INTO direccion (lineauno, lineados, id_estado)
-        VALUES ($1, $2, $3, $4) RETURNING id_direccion
+        VALUES ($1, $2, $3) RETURNING id_direccion
     `;
     const entidadDireccionQuery = `
         INSERT INTO entidad_direccion (id_direccion, id_entidad, id_tipo_direccion_entidad)
@@ -70,8 +70,8 @@ const insertDirecciones = async (entidadId, direcciones) => {
         for (const direccion of direcciones) {
             // Inserta la dirección en la tabla `direccion`
             const direccionResult = await pool.query(direccionQuery, [
-                direccion.lineauno,
-                direccion.lineados,
+                direccion.direccion,
+                direccion.direccion2,
                 direccion.estado,
             ]);
             const direccionId = direccionResult.rows[0].id_direccion;
