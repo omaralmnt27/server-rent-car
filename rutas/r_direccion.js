@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getEstado } = require('../bd/tablas/direccion');
+const { getTipoDireccionEntidad } = require('../bd/tablas/direccion');
 
 router.post('/tipos', getTipoDireccionEntidad);
 
