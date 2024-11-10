@@ -154,7 +154,7 @@ const insertDirecciones = async (entidadId, direcciones) => {
 const getClientes = async () => {
     try {
       const result = await pool.query(`
-    SELECT 
+SELECT 
     e.id_entidad AS id,
     p.nombre,
     p.apellido,
@@ -192,11 +192,10 @@ GROUP BY
     e.id_entidad, 
     p.nombre, 
     p.apellido, 
-    p.fecha_nacimiento, 
-    pa.descripcion
+    p.fecha_nacimiento,
+	pa.descripcion
 ORDER BY 
     e.id_entidad;
-
 
       `);
       return result.rows;
