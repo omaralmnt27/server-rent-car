@@ -67,9 +67,30 @@ const insertDirecciones = async (entidadId, direcciones) => {
     }
 };
 
+
+const getClientes = async () => {
+    try {
+        const result = await pool.query(`
+            SELECT 
+                e.id_entidad AS id,
+                p.nombre,
+                p.apellido,
+                p.fecha_nacimiento,
+            FROM entidad e
+            INNER JOIN persona p ON p.id_entidad = e.id_entidad
+            ORDER BY e.id_entidad
+        `);
+        return result.rows;
+    } catch (error) {
+        console.error("Error al obtener clientes:", error);
+        throw error;
+    }
+};
+
 module.exports = {
     insertCliente,
     insertTelefonos,
     insertDocumentos,
-    insertDirecciones
+    insertDirecciones,
+    getClientes,
 };

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { insertCliente, insertTelefonos, insertDocumentos, insertDirecciones } = require('../bd/tablas/cliente');
+const { insertCliente, insertTelefonos, insertDocumentos, insertDirecciones, getClientes } = require('../bd/tablas/cliente');
 
 // Ruta para registrar cliente
 router.post('/', async (req, res) => {
@@ -68,6 +68,18 @@ router.post('/', async (req, res) => {
         console.error("Error al registrar cliente:", error);
         return res.status(500).json({ error: `Error en el servidor: ${error.message}` });
     }
+
 });
+
+router.get('/', async (req, res) => {
+    try {
+        const clientes = await getClientes();
+        return res.status(200).json(clientes);
+    } catch (error) {
+        console.error("Error al obtener clientes:", error);
+        return res.status(500).json({ error: 'Error al obtener clientes' });
+    }
+});
+
 
 module.exports = router;
