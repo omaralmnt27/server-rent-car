@@ -80,7 +80,7 @@ const insertDirecciones = async (entidadId, direcciones) => {
             await pool.query(entidadDireccionQuery, [
                 direccionId,
                 entidadId,
-                direccion.id_tipo_direccion_entidad // Este valor representa el tipo de la dirección (ej. "fiscal", "residencial", etc.)
+                direccion.tipoDireccion // Este valor representa el tipo de la dirección (ej. "fiscal", "residencial", etc.)
             ]);
         }
     } catch (err) {
