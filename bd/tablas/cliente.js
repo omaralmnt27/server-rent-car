@@ -42,11 +42,11 @@ const insertTelefonos = async (entidadId, telefonos) => {
 };
 
 // Función para insertar documentos
-const insertDocumentos = async (personaId, documentos) => {
-    const query = 'INSERT INTO documento (id_persona, tipo_documento, numero, fecha_emision, fecha_vencimiento, pais) VALUES ($1, $2, $3, $4, $5, $6)';
+const insertDocumentos = async (entidadId, documentos) => {
+    const query = 'INSERT INTO documento (id_entidad, tipo_documento, numero, fecha_emision, fecha_vencimiento, pais) VALUES ($1, $2, $3, $4, $5, $6)';
     try {
         for (const doc of documentos) {
-            await pool.query(query, [personaId, doc.tipo_documento, doc.numero, doc.fecha_emision, doc.fecha_vencimiento, doc.pais]);
+            await pool.query(query, [entidadId, doc.tipo_documento, doc.numero, doc.fecha_emision, doc.fecha_vencimiento, doc.pais]);
         }
     } catch (err) {
         console.error("Error al insertar documentos:", err);
@@ -55,11 +55,11 @@ const insertDocumentos = async (personaId, documentos) => {
 };
 
 // Función para insertar direcciones
-const insertDirecciones = async (personaId, direcciones) => {
-    const query = 'INSERT INTO direccion (id_persona, calle, numero, ciudad, pais, codigo_postal) VALUES ($1, $2, $3, $4, $5, $6)';
+const insertDirecciones = async (entidadId, direcciones) => {
+    const query = 'INSERT INTO direccion (id_entidad, calle, numero, ciudad, pais, codigo_postal) VALUES ($1, $2, $3, $4, $5, $6)';
     try {
         for (const direccion of direcciones) {
-            await pool.query(query, [personaId, direccion.calle, direccion.numero, direccion.ciudad, direccion.pais, direccion.codigo_postal]);
+            await pool.query(query, [entidadId, direccion.calle, direccion.numero, direccion.ciudad, direccion.pais, direccion.codigo_postal]);
         }
     } catch (err) {
         console.error("Error al insertar direcciones:", err);

@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
             // Inserta los documentos asociados, si existen
             if (Array.isArray(documentos) && documentos.length > 0) {
                 try {
-                    await insertDocumentos(clienteId, documentos);
+                    await insertDocumentos(entidadId, documentos);
                     console.log('Documentos registrados correctamente');
                 } catch (error) {
                     console.error("Error al registrar documentos:", error);
@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
             // Inserta las direcciones asociadas, si existen
             if (Array.isArray(direcciones) && direcciones.length > 0) {
                 try {
-                    await insertDirecciones(clienteId, direcciones);
+                    await insertDirecciones(entidadId, direcciones);
                     console.log('Direcciones registradas correctamente');
                 } catch (error) {
                     console.error("Error al registrar direcciones:", error);
