@@ -154,22 +154,23 @@ const insertDirecciones = async (entidadId, direcciones) => {
 const getClientes = async () => {
     try {
       const result = await pool.query(`
-     SELECT 
+    SELECT 
     e.id_entidad AS id,
     p.nombre,
     p.apellido,
     p.fecha_nacimiento,
-    pa.descripcion,
+    pa.descripcion AS pais_entidad,
     
-
+    -- Concatenar todos los teléfonos junto con su tipo en una sola cadena
     COALESCE(
         string_agg(DISTINCT t.telefono || ' (' || tt.descripcion || ')', ', '), 
         '-') AS telefonos,
 
+    -- Concatenar todos los documentos en una cadena simplificada
     COALESCE(
         string_agg(
             DISTINCT d.numeracion || ' (' || 
-            td.descripcion || ', ' || 
+            COALESCE(td.descripcion, 'Desconocido') || ', ' || 
             COALESCE(d.fecha_emision::text, 'Desconocida') || ', ' ||
             COALESCE(d.fecha_vencimiento::text, 'Desconocida') || ', ' ||
             COALESCE(pais.descripcion, 'Desconocido') || ')'
@@ -186,14 +187,16 @@ LEFT JOIN documento d ON d.id_entidad = e.id_entidad
 LEFT JOIN tipo_documento td ON td.id_tipo_documento = d.id_tipo_documento
 LEFT JOIN pais ON d.id_pais = pais.id_pais
 
--- Agrupar por los campos de entidad y persona
+-- Agrupar por los campos de entidad, persona y país de la entidad
 GROUP BY 
     e.id_entidad, 
     p.nombre, 
     p.apellido, 
-    p.fecha_nacimiento
+    p.fecha_nacimiento, 
+    pa.descripcion
 ORDER BY 
     e.id_entidad;
+
 
       `);
       return result.rows;
