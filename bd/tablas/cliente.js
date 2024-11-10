@@ -58,7 +58,7 @@ const insertDocumentos = async (entidadId, documentos) => {
 // Función para insertar direcciones
 const insertDirecciones = async (entidadId, direcciones) => {
     const direccionQuery = `
-        INSERT INTO direccion (lineauno, lineados, id_estado, idtipo_direccion)
+        INSERT INTO direccion (lineauno, lineados, id_estado)
         VALUES ($1, $2, $3, $4) RETURNING id_direccion
     `;
     const entidadDireccionQuery = `
@@ -73,7 +73,6 @@ const insertDirecciones = async (entidadId, direcciones) => {
                 direccion.lineauno,
                 direccion.lineados,
                 direccion.estado,
-                direccion.idtipo_direccion
             ]);
             const direccionId = direccionResult.rows[0].id_direccion;
 
