@@ -25,9 +25,17 @@ const insertDatosAdicionales = async (entidadId, telefonos, documentos, direccio
         // Insertar direcciones
         if (Array.isArray(direcciones) && direcciones.length > 0) {
             for (const dir of direcciones) {
+                // Insertar en la tabla 'direccion' para obtener el id_direccion
+                const direccionResult = await pool.query(
+                    `INSERT INTO direccion (lineauno, lineados, id_estado, id_pais) 
+                     VALUES ($1, $2, $3, $4) RETURNING id_direccion`,
+                    [dir.direccion, dir.direccion2, dir.estado, dir.pais]
+                );
+                const idDireccion = direccionResult.rows[0].id_direccion;
                 await pool.query(
-                    'INSERT INTO direccion (id_entidad, calle, ciudad, estado, pais) VALUES ($1, $2, $3, $4, $5)',
-                    [entidadId, dir.calle, dir.ciudad, dir.estado, dir.pais]
+                    `INSERT INTO entidad_direccion (id_entidad, id_direccion, id_tipo_direccion_entidad) 
+                     VALUES ($1, $2, $3)`,
+                    [entidadId, idDireccion, dir.tipoDireccion]
                 );
             }
         }
