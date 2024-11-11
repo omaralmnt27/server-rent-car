@@ -29,7 +29,7 @@ const insertDatosAdicionales = async (entidadId, telefonos, documentos, direccio
                 const direccionResult = await pool.query(
                     `INSERT INTO direccion (lineauno, lineados, id_estado) 
                      VALUES ($1, $2, $3) RETURNING id_direccion`,
-                    [dir.direccion, dir.direccion2, dir.estado, dir.pais]
+                    [dir.direccion, dir.direccion2, dir.estado]
                 );
                 const idDireccion = direccionResult.rows[0].id_direccion;
                 await pool.query(
