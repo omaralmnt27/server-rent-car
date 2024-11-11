@@ -16,8 +16,8 @@ const insertDatosAdicionales = async (entidadId, telefonos, documentos, direccio
         if (Array.isArray(documentos) && documentos.length > 0) {
             for (const doc of documentos) {
                 await pool.query(
-                    'INSERT INTO documento (id_entidad, id_tipo_documento, numeracion, id_pais) VALUES ($1, $2, $3, $4)',
-                    [entidadId, doc.tipo.id, doc.valor, doc.pais]
+                    'INSERT INTO documento (id_entidad, id_tipo_documento, numeracion, id_pais,fecha_emision,fecha_vencimiento) VALUES ($1, $2, $3, $4, $5, $6)',
+                    [entidadId, doc.tipo.id, doc.valor, doc.pais,doc.fechaEmision,doc.fechaVencimiento]
                 );
             }
         }
