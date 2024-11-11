@@ -159,7 +159,6 @@ SELECT
     p.nombre,
     p.apellido,
     p.fecha_nacimiento,
-    pa.descripcion AS pais,
     
     -- Concatenar todos los teléfonos junto con su tipo en una sola cadena
     COALESCE(
