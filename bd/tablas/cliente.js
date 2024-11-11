@@ -212,6 +212,48 @@ ORDER BY
     }
   };
 
+// Obtener un cliente por su ID
+const getClienteById = async (id) => {
+    const query = `
+        SELECT e.id, e.nombre, e.apellido, e.fecha_nacimiento, e.sexo, e.nombre_empresa, 
+               e.id_tipo_entidad, e.pais_origen,
+               t.telefonos, d.documentos, dir.direcciones
+        FROM entidad e
+        LEFT JOIN (SELECT * FROM telefonos WHERE id_entidad = $1) t ON e.id = t.id_entidad
+        LEFT JOIN (SELECT * FROM documentos WHERE id_entidad = $1) d ON e.id = d.id_entidad
+        LEFT JOIN (SELECT * FROM direcciones WHERE id_entidad = $1) dir ON e.id = dir.id_entidad
+        WHERE e.id = $1;
+    `;
+    const { rows } = await pool.query(query, [id]);
+    return rows[0];
+};
+
+// Actualizar un cliente
+const updateCliente = async (id, data) => {
+    const {
+        tipo_cliente, nombre, apellido, fecha_nacimiento, sexo,
+        nombre_empresa, telefonos, documentos, direcciones, id_tipo_entidad, pais_origen
+    } = data;
+
+    // Actualizar información básica
+    const query = `
+        UPDATE entidad SET
+            nombre = $1,
+            apellido = $2,
+            fecha_nacimiento = $3,
+            sexo = $4,
+            nombre_empresa = $5,
+            id_tipo_entidad = $6,
+            pais_origen = $7
+        WHERE id = $8;
+    `;
+    await pool.query(query, [nombre, apellido, fecha_nacimiento, sexo, nombre_empresa, id_tipo_entidad, pais_origen, id]);
+
+    // Actualizar teléfonos, documentos y direcciones (opcionalmente)
+    await insertTelefonos(id, telefonos);
+    await insertDocumentos(id, documentos);
+    await insertDirecciones(id, direcciones);
+};
 
 module.exports = {
     insertTelefonos,
@@ -220,5 +262,7 @@ module.exports = {
     getClientes,
     insertClienteEmpresa,
     insertDatosAdicionales,
-    insertClientePersona
+    insertClientePersona,
+    getClienteById,
+    updateCliente
 };

@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { insertClientePersona,insertDatosAdicionales, insertClienteEmpresa, insertTelefonos, insertDocumentos, insertDirecciones, getClientes } = require('../bd/tablas/cliente');
+const { insertClientePersona,
+    insertDatosAdicionales, 
+    insertClienteEmpresa, 
+    getClientes } = require('../bd/tablas/cliente');
 
 // Ruta para registrar cliente
 router.post('/', async (req, res) => {
@@ -53,5 +56,58 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const cliente = await getClienteById(id);
+        if (!cliente) {
+            return res.status(404).json({ error: 'Cliente no encontrado' });
+        }
+        return res.status(200).json(cliente);
+    } catch (error) {
+        console.error("Error al obtener cliente:", error);
+        return res.status(500).json({ error: 'Error al obtener cliente' });
+    }
+});
+
+// Ruta para actualizar un cliente
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const {
+        tipo_cliente,
+        nombre,
+        apellido,
+        fecha_nacimiento,
+        sexo,
+        nombre_empresa,
+        telefonos,
+        documentos,
+        direcciones,
+        id_tipo_entidad,
+        pais_origen
+    } = req.body;
+
+    try {
+        await updateCliente(id, {
+            tipo_cliente,
+            nombre,
+            apellido,
+            fecha_nacimiento,
+            sexo,
+            nombre_empresa,
+            telefonos,
+            documentos,
+            direcciones,
+            id_tipo_entidad,
+            pais_origen
+        });
+
+        return res.status(200).json({ message: 'Cliente actualizado correctamente' });
+    } catch (error) {
+        console.error("Error al actualizar cliente:", error);
+        return res.status(500).json({ error: `Error en el servidor: ${error.message}` });
+    }
+});
 
 module.exports = router;
