@@ -224,7 +224,7 @@ const getClienteById = async (id) => {
     // Query para obtener los teléfonos del cliente
     const telefonosQuery = `
         SELECT telefono, tipo_telefono 
-        FROM vista_telefonos_cliente 
+        FROM vw_telefonos_cliente 
         WHERE id = $1;
     `;
 
