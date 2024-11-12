@@ -228,27 +228,53 @@ const getClienteById = async (id) => {
         WHERE id = $1;
     `;
 
+    // Query para obtener los documentos del cliente
+    const documentosQuery = `
+        SELECT 
+            documento,
+            tipo_documento,
+            id_tipo_documento,
+            fecha_emision,
+            fecha_vencimiento,
+            id_pais,
+            pais 
+        FROM vw_documentos_cliente 
+        WHERE id_entidad = $1;
+    `;
+
     try {
-        // Ejecutar ambas consultas en paralelo
-        const [clienteResult, telefonosResult] = await Promise.all([
+        // Ejecutar todas las consultas en paralelo
+        const [clienteResult, telefonosResult, documentosResult] = await Promise.all([
             pool.query(clienteQuery, [id]),
-            pool.query(telefonosQuery, [id])
+            pool.query(telefonosQuery, [id]),
+            pool.query(documentosQuery, [id])
         ]);
 
+        // Obtener los resultados
         const cliente = clienteResult.rows[0];
         const telefonos = telefonosResult.rows.map(row => ({
             telefono: row.telefono,
             tipo: row.tipo_telefono,
             id_tipo_telefono: row.id_tipo_telefono
         }));
+        const documentos = documentosResult.rows.map(row => ({
+            documento: row.documento,
+            tipo: row.tipo_documento,
+            id_tipo_documento: row.id_tipo_documento,
+            fecha_emision: row.fecha_emision,
+            fecha_vencimiento: row.fecha_vencimiento,
+            id_pais: row.id_pais,
+            pais: row.pais
+        }));
 
-        // Retornar el cliente con los teléfonos como un array
-        return { ...cliente, telefonos };
+        // Retornar el cliente con los teléfonos y documentos
+        return { ...cliente, telefonos, documentos };
     } catch (error) {
         console.error("Error al obtener el cliente:", error);
         throw error;
     }
 };
+
 
  
 module.exports = {
