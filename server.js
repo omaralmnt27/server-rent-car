@@ -30,7 +30,7 @@ app.use('/documentos', documentosRoutes);
 app.use('/paises', paisesRoutes);
 app.use('/estados', estadosRoutes);
 app.use('/direcciones', direccionesRoutes);
-app.use('/combustibles', direccionesRoutes);
+app.use('/combustibles', combustiblesRoutes);
 
 
 app.listen(PORT, () => {
