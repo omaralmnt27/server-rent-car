@@ -13,6 +13,7 @@ const traccionesRoutes = require('./rutas/r_traccion.js');
 const marcasRoutes = require('./rutas/r_marca.js'); 
 const modelosRoutes = require('./rutas/r_modelo.js'); 
 const versionesRoutes = require('./rutas/r_version.js'); 
+const estadosVehiculosRoutes = require('./rutas/r_estadoVehiculo.js'); 
 
 
 const app = express();
@@ -39,6 +40,7 @@ app.use('/tracciones', traccionesRoutes);
 app.use('/marcas', marcasRoutes);
 app.use('/modelos', modelosRoutes);
 app.use('/versiones', versionesRoutes);
+app.use('/estadosVehiculos', estadosVehiculosRoutes);
 
 
 app.listen(PORT, () => {
