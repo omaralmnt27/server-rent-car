@@ -233,5 +233,5 @@ module.exports = {
     insertDatosAdicionales,
     insertClientePersona,
     getClienteById,
-    updateCliente
+    //updateCliente
 };
