@@ -8,6 +8,7 @@ const documentosRoutes = require('./rutas/r_documento.js');
 const paisesRoutes = require('./rutas/r_pais.js'); 
 const estadosRoutes = require('./rutas/r_estado.js'); 
 const direccionesRoutes = require('./rutas/r_direccion.js'); 
+const combustiblesRoutes = require('./rutas/r_combustible.js'); 
 
 
 const app = express();
@@ -29,6 +30,7 @@ app.use('/documentos', documentosRoutes);
 app.use('/paises', paisesRoutes);
 app.use('/estados', estadosRoutes);
 app.use('/direcciones', direccionesRoutes);
+app.use('/combustibles', direccionesRoutes);
 
 
 app.listen(PORT, () => {
