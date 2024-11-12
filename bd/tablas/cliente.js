@@ -232,14 +232,7 @@ const getClienteById = async (id) => {
 
     // Query para obtener los documentos del cliente
     const documentosQuery = `
-        SELECT 
-            documento,
-            tipo_documento,
-            id_tipo_documento,
-            fecha_emision,
-            fecha_vencimiento,
-            id_pais,
-            pais 
+        SELECT * 
         FROM vw_documentos_cliente 
         WHERE id_entidad = $1;
     `;
