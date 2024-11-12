@@ -16,6 +16,7 @@ const versionesRoutes = require('./rutas/r_version.js');
 const estadosVehiculosRoutes = require('./rutas/r_estadoVehiculo.js'); 
 const tiposVehiculosRoutes = require('./rutas/r_tipoVehiculo.js'); 
 const coloresRoutes = require('./rutas/r_color.js');
+const vehiculosRoutes = require('./rutas/r_vehiculo.js');
 
 
 
@@ -46,6 +47,7 @@ app.use('/versiones', versionesRoutes);
 app.use('/estadosVehiculos', estadosVehiculosRoutes);
 app.use('/tiposVehiculos', tiposVehiculosRoutes);
 app.use('/colores', coloresRoutes);
+app.use('/vehiculos', vehiculosRoutes);
 
 
 
