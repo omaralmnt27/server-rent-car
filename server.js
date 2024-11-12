@@ -10,7 +10,7 @@ const estadosRoutes = require('./rutas/r_estado.js');
 const direccionesRoutes = require('./rutas/r_direccion.js'); 
 const combustiblesRoutes = require('./rutas/r_combustible.js'); 
 const traccionesRoutes = require('./rutas/r_traccion.js'); 
-const marcasRoutes = require('./rutas/r_marcas.js'); 
+const marcasRoutes = require('./rutas/r_marca.js'); 
 
 
 const app = express();
