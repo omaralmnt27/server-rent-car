@@ -214,6 +214,8 @@ ORDER BY
 
 // Obtener un cliente por su ID
 const getClienteById = async (id) => {
+    console.log("Obteniendo datos para el cliente con id:", id);
+
     // Query para obtener los detalles del cliente
     const clienteQuery = `
         SELECT * 
@@ -250,7 +252,17 @@ const getClienteById = async (id) => {
             pool.query(documentosQuery, [id])
         ]);
 
-        // Obtener los resultados
+        // Logging para depuración
+        console.log("Resultados de cliente:", clienteResult.rows);
+        console.log("Resultados de teléfonos:", telefonosResult.rows);
+        console.log("Resultados de documentos:", documentosResult.rows);
+
+        // Validar si se obtuvieron resultados
+        if (!clienteResult.rows.length) {
+            console.error(`No se encontró cliente con id ${id}`);
+            return null;
+        }
+
         const cliente = clienteResult.rows[0];
         const telefonos = telefonosResult.rows.map(row => ({
             telefono: row.telefono,
@@ -261,14 +273,16 @@ const getClienteById = async (id) => {
             documento: row.documento,
             tipo: row.tipo_documento,
             id_tipo_documento: row.id_tipo_documento,
-            fecha_emision: row.fecha_emision,
-            fecha_vencimiento: row.fecha_vencimiento,
+            fecha_emision: row.fecha_emision ? row.fecha_emision.toISOString().split('T')[0] : null,
+            fecha_vencimiento: row.fecha_vencimiento ? row.fecha_vencimiento.toISOString().split('T')[0] : null,
             id_pais: row.id_pais,
             pais: row.pais
         }));
 
         // Retornar el cliente con los teléfonos y documentos
-        return { ...cliente, telefonos, documentos };
+        const result = { ...cliente, telefonos, documentos };
+        console.log("Resultado final:", result);
+        return result;
     } catch (error) {
         console.error("Error al obtener el cliente:", error);
         throw error;
