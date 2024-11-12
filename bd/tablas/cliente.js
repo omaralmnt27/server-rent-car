@@ -214,13 +214,39 @@ ORDER BY
 
 // Obtener un cliente por su ID
 const getClienteById = async (id) => {
-    const query = `
+    // Query para obtener los detalles del cliente
+    const clienteQuery = `
         SELECT * 
         FROM vw_cliente_detalle 
         WHERE id = $1;
     `;
-    const { rows } = await pool.query(query, [id]);
-    return rows[0];
+
+    // Query para obtener los teléfonos del cliente
+    const telefonosQuery = `
+        SELECT telefono, tipo_telefono 
+        FROM vista_telefonos_cliente 
+        WHERE id = $1;
+    `;
+
+    try {
+        // Ejecutar ambas consultas en paralelo
+        const [clienteResult, telefonosResult] = await Promise.all([
+            pool.query(clienteQuery, [id]),
+            pool.query(telefonosQuery, [id])
+        ]);
+
+        const cliente = clienteResult.rows[0];
+        const telefonos = telefonosResult.rows.map(row => ({
+            telefono: row.telefono,
+            tipo: row.tipo_telefono
+        }));
+
+        // Retornar el cliente con los teléfonos como un array
+        return { ...cliente, telefonos };
+    } catch (error) {
+        console.error("Error al obtener el cliente:", error);
+        throw error;
+    }
 };
 
 
