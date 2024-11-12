@@ -1,6 +1,6 @@
 const pool = require('../conexion');
 
-const getEstado = async (req, res) => {
+const getModelo = async (req, res) => {
   const { id_marca } = req.body; // Tomamos idpais desde el cuerpo de la solicitud
   console.log("ID del país recibido:", id_marca);
   try {
@@ -16,5 +16,5 @@ const getEstado = async (req, res) => {
 };
 
 module.exports = {
-  getEstado
+  getModelo
 };
