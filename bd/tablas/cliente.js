@@ -238,7 +238,8 @@ const getClienteById = async (id) => {
         const cliente = clienteResult.rows[0];
         const telefonos = telefonosResult.rows.map(row => ({
             telefono: row.telefono,
-            tipo: row.tipo_telefono
+            tipo: row.tipo_telefono,
+            id_tipo_telefono: row.id_tipo_telefono
         }));
 
         // Retornar el cliente con los teléfonos como un array
