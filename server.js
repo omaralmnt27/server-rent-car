@@ -11,6 +11,7 @@ const direccionesRoutes = require('./rutas/r_direccion.js');
 const combustiblesRoutes = require('./rutas/r_combustible.js'); 
 const traccionesRoutes = require('./rutas/r_traccion.js'); 
 const marcasRoutes = require('./rutas/r_marca.js'); 
+const modelosRoutes = require('./rutas/r_modelo.js'); 
 
 
 const app = express();
@@ -35,6 +36,7 @@ app.use('/direcciones', direccionesRoutes);
 app.use('/combustibles', combustiblesRoutes);
 app.use('/tracciones', traccionesRoutes);
 app.use('/marcas', marcasRoutes);
+app.use('/modelos', modelosRoutes);
 
 
 app.listen(PORT, () => {
