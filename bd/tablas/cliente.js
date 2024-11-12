@@ -223,7 +223,7 @@ const getClienteById = async (id) => {
 
     // Query para obtener los teléfonos del cliente
     const telefonosQuery = `
-        SELECT telefono, tipo_telefono 
+        SELECT telefono, tipo_telefono, id_tipo_telefono 
         FROM vw_telefonos_cliente 
         WHERE id = $1;
     `;
@@ -250,7 +250,7 @@ const getClienteById = async (id) => {
     }
 };
 
-
+ 
 module.exports = {
     insertTelefonos,
     insertDocumentos,
