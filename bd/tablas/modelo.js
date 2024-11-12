@@ -2,7 +2,7 @@ const pool = require('../conexion');
 
 const getModelo = async (req, res) => {
   const { id_marca } = req.body; // Tomamos idpais desde el cuerpo de la solicitud
-  console.log("ID del país recibido:", id_marca);
+  console.log("ID del marca recibido:", id_marca);
   try {
     const result = await pool.query(
       'SELECT id_modelo AS id, descripcion FROM modelo WHERE id_marca = $1',
