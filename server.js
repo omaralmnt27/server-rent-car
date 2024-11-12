@@ -14,6 +14,8 @@ const marcasRoutes = require('./rutas/r_marca.js');
 const modelosRoutes = require('./rutas/r_modelo.js'); 
 const versionesRoutes = require('./rutas/r_version.js'); 
 const estadosVehiculosRoutes = require('./rutas/r_estadoVehiculo.js'); 
+const tiposVehiculosRoutes = require('./rutas/r_tipoVehiculo.js'); 
+
 
 
 const app = express();
@@ -41,6 +43,8 @@ app.use('/marcas', marcasRoutes);
 app.use('/modelos', modelosRoutes);
 app.use('/versiones', versionesRoutes);
 app.use('/estadosVehiculos', estadosVehiculosRoutes);
+app.use('/tiposVehiculos', tiposVehiculosRoutes);
+
 
 
 app.listen(PORT, () => {
