@@ -10,6 +10,7 @@ const estadosRoutes = require('./rutas/r_estado.js');
 const direccionesRoutes = require('./rutas/r_direccion.js'); 
 const combustiblesRoutes = require('./rutas/r_combustible.js'); 
 const traccionesRoutes = require('./rutas/r_traccion.js'); 
+const marcasRoutes = require('./rutas/r_marcas.js'); 
 
 
 const app = express();
@@ -33,6 +34,7 @@ app.use('/estados', estadosRoutes);
 app.use('/direcciones', direccionesRoutes);
 app.use('/combustibles', combustiblesRoutes);
 app.use('/tracciones', traccionesRoutes);
+app.use('/marcas', marcasRoutes);
 
 
 app.listen(PORT, () => {
