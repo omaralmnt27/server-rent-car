@@ -353,29 +353,54 @@ async function updateClienteEmpresa(id, nombre_empresa, pais_origen, correo) {
 }
 
 // Actualizar datos adicionales (teléfonos, documentos, direcciones)
+async function getTiposTelefono() {
+    // Obtener los tipos de teléfono y crear un mapa
+    const result = await pool.query('SELECT id_tipo_telefono, descripcion FROM tipo_telefono');
+    const tiposTelefonoMap = {};
+    result.rows.forEach(row => {
+        tiposTelefonoMap[row.descripcion.toLowerCase()] = row.id_tipo_telefono;
+    });
+    return tiposTelefonoMap;
+}
+
 async function updateDatosAdicionales(entidadId, telefonos, documentos, direcciones) {
+    // Obtener los tipos de teléfono y crear un mapa
+    const tiposTelefonoMap = await getTiposTelefono();
+
     // Actualizar teléfonos usando el stored procedure
     if (telefonos && telefonos.length > 0) {
         for (const telefono of telefonos) {
+            // Convertir la descripción del tipo de teléfono en su ID
+            const tipoId = tiposTelefonoMap[telefono.tipo.toLowerCase()];
+
+            // Validar que exista el tipo de teléfono
+            if (!tipoId) {
+                console.error(`Tipo de teléfono no encontrado: ${telefono.tipo}`);
+                continue;
+            }
+
             // Llamar al stored procedure para actualizar/insertar el teléfono
-            await pool.query(
-                `CALL sp_update_telefono($1, $2, $3)`,
-                [entidadId, telefono.tipo, telefono.telefono]
-            );
+            try {
+                await pool.query(
+                    `CALL sp_update_telefono($1, $2, $3)`,
+                    [entidadId, tipoId, telefono.telefono]
+                );
+            } catch (error) {
+                console.error(`Error al actualizar teléfono para entidad ${entidadId}:`, error);
+            }
         }
     }
 
-    // Por ahora, omitir la actualización de documentos y direcciones
-    // Dejar estos bloques para usarlos más adelante cuando trabajemos con documentos y direcciones
+    // Actualizar documentos (Placeholder para futura implementación)
     if (documentos && documentos.length > 0) {
         console.log('Documentos recibidos, pero aún no se manejan:', documentos);
     }
 
+    // Actualizar direcciones (Placeholder para futura implementación)
     if (direcciones && direcciones.length > 0) {
         console.log('Direcciones recibidas, pero aún no se manejan:', direcciones);
     }
 }
-
 
 
  
