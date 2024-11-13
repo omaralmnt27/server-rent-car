@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { insertClientePersona,insertDatosAdicionales, insertClienteEmpresa, insertTelefonos, insertDocumentos, insertDirecciones, getClientes, getClienteById } = require('../bd/tablas/cliente');
+const { insertClientePersona,insertDatosAdicionales, insertClienteEmpresa, updateClienteEmpresa, updateClientePersona, updateDatosAdicionales, insertTelefonos, insertDocumentos, insertDirecciones, getClientes, getClienteById } = require('../bd/tablas/cliente');
 
 // Ruta para registrar cliente
 router.post('/', async (req, res) => {
@@ -69,6 +69,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Ruta para actualizar un cliente
+// Ruta para actualizar un cliente
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
     const {
@@ -85,20 +86,22 @@ router.put('/:id', async (req, res) => {
         pais_origen
     } = req.body;
 
+    console.log("Datos recibidos para actualizar:", req.body);
+
     try {
-        await updateCliente(id, {
-            tipo_cliente,
-            nombre,
-            apellido,
-            fecha_nacimiento,
-            sexo,
-            nombre_empresa,
-            telefonos,
-            documentos,
-            direcciones,
-            id_tipo_entidad,
-            pais_origen
-        });
+        let entidadId;
+
+        // Actualizar según el tipo de entidad
+        if (id_tipo_entidad === 1) { // Cliente persona
+            entidadId = await updateClientePersona(id, nombre, apellido, fecha_nacimiento, sexo, pais_origen);
+        } else if (id_tipo_entidad === 2) { // Cliente empresa
+            entidadId = await updateClienteEmpresa(id, nombre_empresa, pais_origen);
+        } else {
+            return res.status(400).json({ error: 'Tipo de entidad no válido' });
+        }
+
+        // Actualizar los datos adicionales (teléfonos, documentos, direcciones)
+        await updateDatosAdicionales(id, telefonos, documentos, direcciones);
 
         return res.status(200).json({ message: 'Cliente actualizado correctamente' });
     } catch (error) {

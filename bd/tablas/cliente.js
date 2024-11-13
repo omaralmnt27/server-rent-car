@@ -311,6 +311,64 @@ const getClienteById = async (id) => {
 };
 
 
+// Actualizar cliente persona
+async function updateClientePersona(id, nombre, apellido, fecha_nacimiento, sexo, pais_origen) {
+    const query = `
+        UPDATE entidad
+        SET nombre = $1, apellido = $2, fecha_nacimiento = $3, sexo = $4, pais_origen = $5
+        WHERE id_entidad = $6
+    `;
+    await pool.query(query, [nombre, apellido, fecha_nacimiento, sexo, pais_origen, id]);
+}
+
+// Actualizar cliente empresa
+async function updateClienteEmpresa(id, nombre_empresa, pais_origen) {
+    const query = `
+        UPDATE entidad
+        SET nombre_empresa = $1, pais_origen = $2
+        WHERE id_entidad = $3
+    `;
+    await pool.query(query, [nombre_empresa, pais_origen, id]);
+}
+
+// Actualizar datos adicionales (teléfonos, documentos, direcciones)
+async function updateDatosAdicionales(entidadId, telefonos, documentos, direcciones) {
+    // Actualizar teléfonos
+    if (telefonos && telefonos.length > 0) {
+        await pool.query(`DELETE FROM telefono WHERE id_entidad = $1`, [entidadId]);
+        for (const telefono of telefonos) {
+            await pool.query(
+                `INSERT INTO telefono (id_entidad, telefono, tipo) VALUES ($1, $2, $3)`,
+                [entidadId, telefono.telefono, telefono.tipo]
+            );
+        }
+    }
+
+    // Actualizar documentos
+    if (documentos && documentos.length > 0) {
+        await pool.query(`DELETE FROM documento WHERE id_entidad = $1`, [entidadId]);
+        for (const documento of documentos) {
+            await pool.query(
+                `INSERT INTO documento (id_entidad, documento, tipo, fecha_emision, fecha_vencimiento, id_pais) 
+                 VALUES ($1, $2, $3, $4, $5, $6)`,
+                [entidadId, documento.numero, documento.tipo, documento.fecha_emision, documento.fecha_vencimiento, documento.id_pais]
+            );
+        }
+    }
+
+    // Actualizar direcciones
+    if (direcciones && direcciones.length > 0) {
+        await pool.query(`DELETE FROM direccion WHERE id_entidad = $1`, [entidadId]);
+        for (const direccion of direcciones) {
+            await pool.query(
+                `INSERT INTO direccion (id_entidad, lineauno, lineados, id_estado, id_tipo_direccion_entidad, id_pais) 
+                 VALUES ($1, $2, $3, $4, $5, $6)`,
+                [entidadId, direccion.lineauno, direccion.lineados, direccion.id_estado, direccion.id_tipo_direccion_entidad, direccion.id_pais]
+            );
+        }
+    }
+}
+
 
  
 module.exports = {
@@ -322,5 +380,8 @@ module.exports = {
     insertDatosAdicionales,
     insertClientePersona,
     getClienteById,
+    updateClientePersona,
+    updateClienteEmpresa,
+    updateDatosAdicionales
     //updateCliente
 };
