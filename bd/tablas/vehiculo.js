@@ -1,5 +1,4 @@
 const db = require('../conexion');
-const pool = require('../db')
 
 // Función para insertar un vehículo en la tabla `vehiculo`
 const insertVehiculo = async ({
