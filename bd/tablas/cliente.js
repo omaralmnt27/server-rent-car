@@ -402,7 +402,7 @@ async function updateDatosAdicionales(entidadId, telefonos, documentos, direccio
                     entidadId,
                     documento.id_tipo_documento,
                     documento.id_pais,
-                    documento.numeracion,
+                    documento.numero,
                     documento.fecha_emision,
                     documento.fecha_vencimiento,
                     documento.imagen_frontal,
