@@ -27,7 +27,7 @@ const insertVehiculo = async ({
                 id_version,
                 id_tipo_vehiculo,
                 id_estado_vehiculo,
-                id_tipo_trasccion
+                id_tipo_traccion
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id_vehiculo;
         `;
         const values = [
