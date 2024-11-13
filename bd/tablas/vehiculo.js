@@ -1,4 +1,4 @@
-const pool = require('../conexion');
+const db = require('../conexion');
 
 // Función para insertar un vehículo en la tabla `vehiculo`
 const insertVehiculo = async ({
@@ -55,7 +55,7 @@ const insertVehiculo = async ({
 
 const getVehiculo = async () => {
     try {
-        const result = await pool.query(`
+        const result = await db.query(`
             SELECT 
                 v.id_vehiculo AS id, 
                 v.matricula, 
@@ -78,7 +78,7 @@ const getVehiculo = async () => {
             INNER JOIN marca m ON mo.id_marca = m.id_marca
             INNER JOIN tipo_vehiculo tv ON v.id_tipo_vehiculo = tv.id_tipo_vehiculo
             INNER JOIN estado_vehiculo ev ON v.id_estado_vehiculo = ev.id_estado_vehiculo
-            INNER JOIN tipo_traccion tt ON v.id_tipo_traccion = tt.id_tipo_traccion
+            INNER JOIN tipo_traccion tt ON v.id_tipo_traccion = tt.id_tipo_traccion;
         `);
         return result.rows;
     } catch (error) {
