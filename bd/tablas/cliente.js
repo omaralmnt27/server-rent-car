@@ -304,7 +304,8 @@ const getClienteById = async (id) => {
             id_pais: row.id_pais,
             pais: row.pais
         }));
-        
+        console.log("Direcciones mapeadas desde el backend:", direcciones);
+
 
         // Retornar el cliente con los teléfonos, documentos y direcciones
         const result = { ...cliente, telefonos, documentos, direcciones };
