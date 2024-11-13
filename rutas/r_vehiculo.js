@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { insertVehiculo } = require('../bd/tablas/vehiculo');
+const { insertVehiculo, getVehiculo } = require('../bd/tablas/vehiculo');
 
 // Ruta para registrar un nuevo vehículo
 router.post('/', async (req, res) => {
@@ -39,5 +39,17 @@ router.post('/', async (req, res) => {
         return res.status(500).json({ error: `Error en el servidor: ${error.message}` });
     }
 });
+
+
+router.get('/', async (req, res) => {
+    try {
+        const vehiculos = await getVehiculo();
+        return res.status(200).json(vehiculos);
+    } catch (error) {
+        console.error("Error al obtener los vehiculos:", error);
+        return res.status(500).json({ error: 'Error al obtener los vehículos' });
+    }
+});
+
 
 module.exports = router;

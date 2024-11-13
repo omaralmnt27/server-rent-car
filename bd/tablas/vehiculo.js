@@ -53,7 +53,39 @@ const insertVehiculo = async ({
     }
 };
 
+const getVehiculo = async () => {
+    try {
+        const result = await pool.query(`
+            SELECT 
+                v.id_vehiculo AS id, 
+                v.matricula, 
+                v.placa, 
+                v.anio,
+                v.consumo, 
+                v.cantidad_puerta, 
+                v.cantidad_pasajero, 
+                c.descripcion AS color,
+                ve.descripcion AS version, 
+                tv.descripcion AS tipo_vehiculo,
+                ev.descripcion AS estado_vehiculo, 
+                tt.descripcion AS tipo_traccion
+            FROM vehiculo v
+            INNER JOIN color c ON v.id_color = c.id_color
+            INNER JOIN version ve ON v.id_version = ve.id_version
+            INNER JOIN tipo_vehiculo tv ON v.id_tipo_vehiculo = tv.id_tipo_vehiculo
+            INNER JOIN estado_vehiculo ev ON v.id_estado_vehiculo = ev.id_estado_vehiculo
+            INNER JOIN tipo_traccion tt ON v.id_tipo_traccion = tt.id_tipo_traccion
+        `);
+        return result.rows;
+    } catch (error) {
+        console.error("Error al obtener vehículos:", error);
+        throw error;
+    }
+};
+
+
+
 module.exports = {
     insertVehiculo,
-    // otras funciones si existen
+    getVehiculo,
 };
