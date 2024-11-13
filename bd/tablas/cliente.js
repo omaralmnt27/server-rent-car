@@ -312,23 +312,44 @@ const getClienteById = async (id) => {
 
 
 // Actualizar cliente persona
-async function updateClientePersona(id, nombre, apellido, fecha_nacimiento, sexo, pais_origen) {
-    const query = `
-        UPDATE entidad
-        SET nombre = $1, apellido = $2, fecha_nacimiento = $3, sexo = $4, pais_origen = $5
-        WHERE id_entidad = $6
-    `;
-    await pool.query(query, [nombre, apellido, fecha_nacimiento, sexo, pais_origen, id]);
+async function updateClientePersona(id, nombre, apellido, fecha_nacimiento, sexo, pais_origen, correo) {
+    try {
+        const query = `
+            CALL sp_update_cliente($1, $2, $3, $4, $5, $6, NULL, $7, $8)
+        `;
+        await pool.query(query, [
+            id,              // id_entidad
+            1,               // tipo_cliente (1 = Persona)
+            nombre,
+            apellido,
+            fecha_nacimiento,
+            sexo,
+            pais_origen,
+            correo           // Correo electrónico
+        ]);
+    } catch (err) {
+        console.error("Error al actualizar cliente persona:", err);
+        throw err;
+    }
 }
 
 // Actualizar cliente empresa
-async function updateClienteEmpresa(id, nombre_empresa, pais_origen) {
-    const query = `
-        UPDATE entidad
-        SET nombre_empresa = $1, pais_origen = $2
-        WHERE id_entidad = $3
-    `;
-    await pool.query(query, [nombre_empresa, pais_origen, id]);
+async function updateClienteEmpresa(id, nombre_empresa, pais_origen, correo) {
+    try {
+        const query = `
+            CALL sp_update_cliente($1, $2, NULL, NULL, NULL, NULL, $3, $4, $5)
+        `;
+        await pool.query(query, [
+            id,               // id_entidad
+            2,                // tipo_cliente (2 = Empresa)
+            nombre_empresa,
+            pais_origen,
+            correo            // Correo electrónico
+        ]);
+    } catch (err) {
+        console.error("Error al actualizar cliente empresa:", err);
+        throw err;
+    }
 }
 
 // Actualizar datos adicionales (teléfonos, documentos, direcciones)
