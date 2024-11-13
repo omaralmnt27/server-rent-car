@@ -239,14 +239,7 @@ const getClienteById = async (id) => {
 
     // Query para obtener las direcciones del cliente
     const direccionesQuery = `
-        SELECT 
-            id_direccion,
-            lineauno,
-            lineados,
-            id_estado,
-            estado,
-            id_tipo_direccion_entidad,
-            tipo_direccion
+        SELECT *
         FROM vw_direcciones_cliente 
         WHERE id_entidad = $1;
     `;
