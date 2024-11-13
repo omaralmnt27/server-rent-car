@@ -300,8 +300,11 @@ const getClienteById = async (id) => {
             id_estado: row.id_estado,
             estado: row.estado,
             id_tipo_direccion_entidad: row.id_tipo_direccion_entidad,
-            tipo_direccion: row.tipo_direccion
+            tipo_direccion: row.tipo_direccion,
+            id_pais: row.id_pais,
+            pais: row.pais
         }));
+        
 
         // Retornar el cliente con los teléfonos, documentos y direcciones
         const result = { ...cliente, telefonos, documentos, direcciones };
