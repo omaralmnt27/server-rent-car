@@ -393,9 +393,23 @@ async function updateDatosAdicionales(entidadId, telefonos, documentos, direccio
 
     // Actualizar documentos (Placeholder para futura implementación)
     if (documentos && documentos.length > 0) {
-        console.log('Documentos recibidos, pero aún no se manejan:', documentos);
+        for (const documento of documentos) {
+            await pool.query(
+                `CALL sp_update_documento($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+                [
+                    documento.id_documento || null, // Pasar `NULL` si es un nuevo documento
+                    entidadId,
+                    documento.id_tipo_documento,
+                    documento.id_pais,
+                    documento.numeracion,
+                    documento.fecha_emision,
+                    documento.fecha_vencimiento,
+                    documento.imagen_frontal,
+                    documento.imagen_trasera
+                ]
+            );
+        }
     }
-
     // Actualizar direcciones (Placeholder para futura implementación)
     if (direcciones && direcciones.length > 0) {
         console.log('Direcciones recibidas, pero aún no se manejan:', direcciones);
