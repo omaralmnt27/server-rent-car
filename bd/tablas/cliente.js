@@ -354,41 +354,28 @@ async function updateClienteEmpresa(id, nombre_empresa, pais_origen, correo) {
 
 // Actualizar datos adicionales (teléfonos, documentos, direcciones)
 async function updateDatosAdicionales(entidadId, telefonos, documentos, direcciones) {
-    // Actualizar teléfonos
+    // Actualizar teléfonos usando el stored procedure
     if (telefonos && telefonos.length > 0) {
-        await pool.query(`DELETE FROM telefono WHERE id_entidad = $1`, [entidadId]);
         for (const telefono of telefonos) {
+            // Llamar al stored procedure para actualizar/insertar el teléfono
             await pool.query(
-                `INSERT INTO telefono (id_entidad, telefono, tipo) VALUES ($1, $2, $3)`,
-                [entidadId, telefono.telefono, telefono.tipo]
+                `CALL sp_update_telefono($1, $2, $3)`,
+                [entidadId, telefono.tipo, telefono.telefono]
             );
         }
     }
 
-    // Actualizar documentos
+    // Por ahora, omitir la actualización de documentos y direcciones
+    // Dejar estos bloques para usarlos más adelante cuando trabajemos con documentos y direcciones
     if (documentos && documentos.length > 0) {
-        await pool.query(`DELETE FROM documento WHERE id_entidad = $1`, [entidadId]);
-        for (const documento of documentos) {
-            await pool.query(
-                `INSERT INTO documento (id_entidad, documento, tipo, fecha_emision, fecha_vencimiento, id_pais) 
-                 VALUES ($1, $2, $3, $4, $5, $6)`,
-                [entidadId, documento.numero, documento.tipo, documento.fecha_emision, documento.fecha_vencimiento, documento.id_pais]
-            );
-        }
+        console.log('Documentos recibidos, pero aún no se manejan:', documentos);
     }
 
-    // Actualizar direcciones
     if (direcciones && direcciones.length > 0) {
-        await pool.query(`DELETE FROM direccion WHERE id_entidad = $1`, [entidadId]);
-        for (const direccion of direcciones) {
-            await pool.query(
-                `INSERT INTO direccion (id_entidad, lineauno, lineados, id_estado, id_tipo_direccion_entidad, id_pais) 
-                 VALUES ($1, $2, $3, $4, $5, $6)`,
-                [entidadId, direccion.lineauno, direccion.lineados, direccion.id_estado, direccion.id_tipo_direccion_entidad, direccion.id_pais]
-            );
-        }
+        console.log('Direcciones recibidas, pero aún no se manejan:', direcciones);
     }
 }
+
 
 
  
