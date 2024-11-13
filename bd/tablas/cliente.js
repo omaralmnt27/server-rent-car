@@ -282,7 +282,8 @@ const getClienteById = async (id) => {
             fecha_emision: row.fecha_emision ? row.fecha_emision.toISOString().split('T')[0] : null,
             fecha_vencimiento: row.fecha_vencimiento ? row.fecha_vencimiento.toISOString().split('T')[0] : null,
             id_pais: row.id_pais,
-            pais: row.pais
+            pais: row.pais,
+            id_documento: row.id_documento
         }));
 
         // Mapear las direcciones
