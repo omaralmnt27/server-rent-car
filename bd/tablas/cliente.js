@@ -364,6 +364,19 @@ async function getTiposTelefono() {
     return tiposTelefonoMap;
 }
 
+async function getTiposDocumento() {
+    const query = `SELECT id_tipo_documento, descripcion FROM tipo_documento`;
+    const result = await pool.query(query);
+    
+    // Convertir los resultados en un mapa con la descripción como clave y el id como valor
+    const tiposDocumentoMap = {};
+    result.rows.forEach((row) => {
+        tiposDocumentoMap[row.descripcion.toLowerCase()] = row.id_tipo_documento;
+    });
+    return tiposDocumentoMap;
+}
+
+
 async function updateDatosAdicionales(entidadId, telefonos, documentos, direcciones) {
     // Obtener los tipos de teléfono y crear un mapa
     const tiposTelefonoMap = await getTiposTelefono();
@@ -395,22 +408,35 @@ async function updateDatosAdicionales(entidadId, telefonos, documentos, direccio
     // Actualizar documentos (Placeholder para futura implementación)
     if (documentos && documentos.length > 0) {
         for (const documento of documentos) {
-            await pool.query(
-                `CALL sp_update_documento($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-                [
-                    documento.id_documento || null, // Pasar `NULL` si es un nuevo documento
-                    entidadId,
-                    documento.id_tipo_documento,
-                    documento.id_pais,
-                    documento.numero,
-                    documento.fecha_emision,
-                    documento.fecha_vencimiento,
-                    documento.imagen_frontal,
-                    documento.imagen_trasera
-                ]
-            );
+            // Convertir la descripción del tipo de documento en su ID
+            const tipoDocumentoId = tiposDocumentoMap[documento.tipo.toLowerCase()];
+
+            // Validar que exista el tipo de documento
+            if (!tipoDocumentoId) {
+                console.error(`Tipo de documento no encontrado: ${documento.tipo}`);
+                continue;
+            }
+
+            // Llamar al stored procedure para actualizar/insertar el documento
+            try {
+                await pool.query(
+                    `CALL sp_update_documento($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+                    [
+                        documento.id_documento || null, // Pasar `NULL` si es un nuevo documento
+                        entidadId,
+                        tipoDocumentoId, // Usar el ID en lugar de la descripción
+                        documento.id_pais,
+                        documento.numero,
+                        documento.fecha_emision,
+                        documento.fecha_vencimiento,
+                        documento.imagen_frontal,
+                        documento.imagen_trasera
+                    ]
+                );
+            } catch (error) {
+                console.error(`Error al actualizar documento para entidad ${entidadId}:`, error);
+            }
         }
-    }
     // Actualizar direcciones (Placeholder para futura implementación)
     if (direcciones && direcciones.length > 0) {
         console.log('Direcciones recibidas, pero aún no se manejan:', direcciones);
