@@ -237,18 +237,27 @@ const getClienteById = async (id) => {
         WHERE id_entidad = $1;
     `;
 
+    // Query para obtener las direcciones del cliente
+    const direccionesQuery = `
+        SELECT *
+        FROM vw_direcciones_cliente 
+        WHERE id_entidad = $1;
+    `;
+
     try {
         // Ejecutar todas las consultas en paralelo
-        const [clienteResult, telefonosResult, documentosResult] = await Promise.all([
+        const [clienteResult, telefonosResult, documentosResult, direccionesResult] = await Promise.all([
             pool.query(clienteQuery, [id]),
             pool.query(telefonosQuery, [id]),
-            pool.query(documentosQuery, [id])
+            pool.query(documentosQuery, [id]),
+            pool.query(direccionesQuery, [id])
         ]);
 
         // Logging para depuración
         console.log("Resultados de cliente:", clienteResult.rows);
         console.log("Resultados de teléfonos:", telefonosResult.rows);
         console.log("Resultados de documentos:", documentosResult.rows);
+        console.log("Resultados de direcciones:", direccionesResult.rows);
 
         // Validar si se obtuvieron resultados
         if (!clienteResult.rows.length) {
@@ -257,11 +266,15 @@ const getClienteById = async (id) => {
         }
 
         const cliente = clienteResult.rows[0];
+
+        // Mapear los teléfonos
         const telefonos = telefonosResult.rows.map(row => ({
             telefono: row.telefono,
             tipo: row.tipo_telefono,
             id_tipo_telefono: row.id_tipo_telefono
         }));
+
+        // Mapear los documentos
         const documentos = documentosResult.rows.map(row => ({
             documento: row.documento,
             tipo: row.tipo_documento,
@@ -272,8 +285,23 @@ const getClienteById = async (id) => {
             pais: row.pais
         }));
 
-        // Retornar el cliente con los teléfonos y documentos
-        const result = { ...cliente, telefonos, documentos };
+        // Mapear las direcciones
+        const direcciones = direccionesResult.rows.map(row => ({
+            id_direccion: row.id_direccion,
+            lineauno: row.lineauno,
+            lineados: row.lineados,
+            id_estado: row.id_estado,
+            estado: row.estado,
+            id_tipo_direccion_entidad: row.id_tipo_direccion_entidad,
+            tipo_direccion: row.tipo_direccion,
+            id_pais: row.id_pais,
+            pais: row.pais
+        }));
+        console.log("Direcciones mapeadas desde el backend:", direcciones);
+
+
+        // Retornar el cliente con los teléfonos, documentos y direcciones
+        const result = { ...cliente, telefonos, documentos, direcciones };
         console.log("Resultado final:", result);
         return result;
     } catch (error) {
@@ -281,6 +309,7 @@ const getClienteById = async (id) => {
         throw error;
     }
 };
+
 
 
  
