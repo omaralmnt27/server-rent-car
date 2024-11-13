@@ -86,21 +86,17 @@ router.put('/:id', async (req, res) => {
         pais_origen
     } = req.body;
 
-    console.log("Datos recibidos para actualizar:", req.body);
-
     try {
-        let entidadId;
-
         // Actualizar según el tipo de entidad
         if (id_tipo_entidad === 1) { // Cliente persona
-            entidadId = await updateClientePersona(id, nombre, apellido, fecha_nacimiento, sexo, pais_origen);
+            await updateClientePersona(id, nombre, apellido, fecha_nacimiento, sexo, pais_origen);
         } else if (id_tipo_entidad === 2) { // Cliente empresa
-            entidadId = await updateClienteEmpresa(id, nombre_empresa, pais_origen);
+            await updateClienteEmpresa(id, nombre_empresa, pais_origen);
         } else {
             return res.status(400).json({ error: 'Tipo de entidad no válido' });
         }
 
-        // Actualizar los datos adicionales (teléfonos, documentos, direcciones)
+        // Actualizar datos adicionales
         await updateDatosAdicionales(id, telefonos, documentos, direcciones);
 
         return res.status(200).json({ message: 'Cliente actualizado correctamente' });
@@ -109,5 +105,6 @@ router.put('/:id', async (req, res) => {
         return res.status(500).json({ error: `Error en el servidor: ${error.message}` });
     }
 });
+
 
 module.exports = router;
