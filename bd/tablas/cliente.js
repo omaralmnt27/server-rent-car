@@ -51,8 +51,8 @@ const insertClientePersona = async (nombre, apellido, fecha_nacimiento, sexo, co
     try {
         // Llamar al stored procedure para insertar cliente
         await pool.query(
-            `CALL sp_insert_cliente($1, $2, $3, $4, $5, $6, $7)`,
-            [nombre, apellido, fecha_nacimiento, sexo, correo, id_pais, id_tipo_cliente]
+            `CALL sp_insert_cliente($1, $2, $3, $4, $5, $6)`,
+            [nombre, apellido, fecha_nacimiento, sexo, correo, id_pais]
         );
         console.log("Cliente insertado exitosamente");
     } catch (err) {

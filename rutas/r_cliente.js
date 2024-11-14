@@ -22,7 +22,6 @@ router.post('/', async (req, res) => {
             apellido,
             fecha_nacimiento,
             sexo,
-            id_tipo_cliente,
             correo,
             pais_origen
         );
