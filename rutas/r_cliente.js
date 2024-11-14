@@ -11,7 +11,10 @@ router.post('/', async (req, res) => {
         fecha_nacimiento,
         sexo,
         correo,
-        pais_origen
+        pais_origen,
+        telefonos,
+        documentos,
+        direcciones
     } = req.body;
 
     try {
@@ -25,7 +28,7 @@ router.post('/', async (req, res) => {
             pais_origen
         );
 
-        insertDatosAdicionales(personaId, telefonos, direcciones);
+        insertDatosAdicionales(personaID,telefonos,documentos,direcciones)
 
         return res.status(200).json({ message: 'Cliente registrado correctamente', id_persona: personaId });
     } catch (error) {
