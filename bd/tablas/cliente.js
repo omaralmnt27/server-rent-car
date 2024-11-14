@@ -46,7 +46,7 @@ const insertDatosAdicionales = async (personaId, telefonos, documentos, direccio
 };
 
 // Función para insertar un cliente
-const insertClientePersona = async (nombre, apellido, fecha_nacimiento, sexo, id_tipo_cliente, correo, pais_origen) => {
+const insertClientePersona = async (nombre, apellido, fecha_nacimiento, sexo, correo, pais_origen) => {
     try {
         // Paso 1: Insertar en la tabla `persona`
         const q_persona = await pool.query(

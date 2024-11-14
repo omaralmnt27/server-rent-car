@@ -12,7 +12,8 @@ router.post('/', async (req, res) => {
         telefonos,
         documentos,
         direcciones,
-        pais_origen
+        pais_origen,
+        correo
     } = req.body;
 
     console.log("Datos recibidos en el servidor:", req.body);
@@ -20,7 +21,7 @@ router.post('/', async (req, res) => {
     try {
         let personaId;
 
-         personaId = await insertClientePersona(nombre, apellido, fecha_nacimiento, sexo, pais_origen);
+         personaId = await insertClientePersona(nombre, apellido, fecha_nacimiento, sexo, pais_origen, correo);
       
         // Inserta los datos adicionales
         await insertDatosAdicionales(personaId, telefonos, documentos, direcciones);
