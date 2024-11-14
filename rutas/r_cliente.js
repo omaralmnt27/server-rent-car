@@ -3,36 +3,36 @@ const router = express.Router();
 const { insertClientePersona,insertDatosAdicionales, updateClientePersona, updateDatosAdicionales, insertTelefonos, insertDocumentos, insertDirecciones, getClientes, getClienteById } = require('../bd/tablas/cliente');
 
 // Ruta para registrar cliente
+
 router.post('/', async (req, res) => {
     const {
         nombre,
         apellido,
         fecha_nacimiento,
         sexo,
-        telefonos,
-        documentos,
-        direcciones,
-        pais_origen,
-        correo
+        id_tipo_cliente,
+        correo,
+        pais_origen
     } = req.body;
 
-    console.log("Datos recibidos en el servidor:", req.body);
-
     try {
-        let personaId;
+        // Insertar el cliente y la persona usando la función creada
+        const personaId = await insertClientePersona(
+            nombre,
+            apellido,
+            fecha_nacimiento,
+            sexo,
+            id_tipo_cliente,
+            correo,
+            pais_origen
+        );
 
-         personaId = await insertClientePersona(nombre, apellido, fecha_nacimiento, sexo, pais_origen, correo);
-      
-        // Inserta los datos adicionales
-        await insertDatosAdicionales(personaId, telefonos, documentos, direcciones);
-
-        return res.status(200).json({ message: 'Cliente registrado correctamente' });
+        return res.status(200).json({ message: 'Cliente registrado correctamente', id_persona: personaId });
     } catch (error) {
         console.error("Error al registrar cliente:", error);
-        return res.status(500).json({ error: `Error en el servidor: ${error.message}` });
+        return res.status(500).json({ error: 'Error al registrar cliente' });
     }
 });
-
 
 router.get('/', async (req, res) => {
     try {

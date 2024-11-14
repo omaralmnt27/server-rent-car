@@ -46,24 +46,17 @@ const insertDatosAdicionales = async (personaId, telefonos, documentos, direccio
 };
 
 // Función para insertar un cliente
-const insertClientePersona = async (nombre, apellido, fecha_nacimiento, sexo, correo, pais_origen) => {
+
+const insertClientePersona = async (nombre, apellido, fecha_nacimiento, sexo, correo, id_pais, id_tipo_cliente) => {
     try {
-        // Paso 1: Insertar en la tabla `persona`
-        const q_persona = await pool.query(
-            'INSERT INTO persona (nombre, apellido, fecha_nacimiento, sexo, correo, id_pais) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id_persona',
-            [nombre, apellido, fecha_nacimiento, sexo, correo, pais_origen]
-        );
-        const personaId = q_persona.rows[0].id_persona;
-
-        // Paso 2: Insertar en la tabla `cliente`
+        // Llamar al stored procedure para insertar cliente
         await pool.query(
-            'INSERT INTO cliente (id_persona, id_tipo_cliente) VALUES ($1, $2)',
-            [personaId, id_tipo_cliente]
+            `CALL sp_insert_cliente($1, $2, $3, $4, $5, $6, $7)`,
+            [nombre, apellido, fecha_nacimiento, sexo, correo, id_pais, id_tipo_cliente]
         );
-
-        return personaId;
+        console.log("Cliente insertado exitosamente");
     } catch (err) {
-        console.error("Error al registrar cliente persona:", err);
+        console.error("Error al registrar cliente persona usando el SP:", err);
         throw err;
     }
 };
