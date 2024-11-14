@@ -29,6 +29,7 @@ router.post('/', async (req, res) => {
         );
 
         try {
+            console.log('id persona: '. personaId);
             await insertDatosAdicionales(personaId, telefonos, documentos, direcciones);
         } catch (error) {
             console.error("Error al insertar datos adicionales:", error);

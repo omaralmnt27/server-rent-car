@@ -1,6 +1,8 @@
 const pool = require('../conexion');
 
 const insertDatosAdicionales = async (personaId, telefonos, documentos, direcciones) => {
+    console.log('------------------------------------');
+    console.log(documentos);
     try {
         // Insertar teléfonos
         if (Array.isArray(telefonos) && telefonos.length > 0) {
