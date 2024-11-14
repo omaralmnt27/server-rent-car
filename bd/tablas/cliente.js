@@ -1,5 +1,17 @@
 const pool = require('../conexion');
 
+
+const getTelefonoOrder = async (idPersona, idTipoTelefono) => {
+    const result = await pool.query(
+        `SELECT COALESCE(MAX(orden), 0) + 1 AS next_order 
+         FROM telefono 
+         WHERE id_persona = $1 AND id_tipo_telefono = $2`,
+        [idPersona, idTipoTelefono]
+    );
+    return result.rows[0].next_order;
+};
+
+
 const insertDatosAdicionales = async (personaId, telefonos, documentos, direcciones) => {
     console.log('------------------------------------');
     console.log(documentos);
@@ -7,12 +19,22 @@ const insertDatosAdicionales = async (personaId, telefonos, documentos, direccio
         // Insertar teléfonos
         if (Array.isArray(telefonos) && telefonos.length > 0) {
             for (const telefono of telefonos) {
-                await pool.query(
-                    'INSERT INTO telefono (id_persona,id_tipo_telefono, telefono) VALUES ($1, $2, $3)',
-                    [personaId, telefono.tipo.id,telefono.valor]
-                );
+                try {
+                    // Obtener el próximo valor de orden para la combinación actual de id_persona y id_tipo_telefono
+                    const orden = await getTelefonoOrder(personaId, telefono.tipo.id);
+        
+                    // Insertar el teléfono con el orden calculado
+                    await pool.query(
+                        'INSERT INTO telefono (id_persona, id_tipo_telefono, telefono, orden) VALUES ($1, $2, $3, $4)',
+                        [personaId, telefono.tipo.id, telefono.valor, orden]
+                    );
+        
+                } catch (error) {
+                    console.error("Error al insertar teléfono:", error);
+                }
             }
         }
+        
 
         // Insertar documentos
         if (Array.isArray(documentos) && documentos.length > 0) {
