@@ -59,17 +59,22 @@ const insertClientePersona = async (nombre, apellido, fecha_nacimiento, sexo, co
     console.log(correo)
     console.log(id_pais)
     try {
-        // Llamar al stored procedure para insertar cliente
-        await pool.query(
-            `CALL sp_insert_cliente($1::VARCHAR, $2::VARCHAR, $3::DATE, $4::CHAR, $5::VARCHAR, $6::INTEGER, $7::INTEGER)`,
-            [nombre, apellido, fecha_nacimiento, sexo, correo, id_pais,  null]
+        // Crear una variable para almacenar el ID devuelto por el procedimiento
+        const result = await pool.query(
+            `CALL sp_insert_cliente($1, $2, $3, $4, $5, $6, $7, $8)`,
+            [nombre, apellido, fecha_nacimiento, sexo, correo, id_pais, null, null]
         );
-        
-        console.log("Cliente insertado exitosamente");
+    
+        // El `id_persona` se devolverá en la última posición del resultado
+        const personaId = result.rows[0]?.p_id_persona;
+        console.log("Cliente insertado con id_persona:", personaId);
+    
+        return personaId;
     } catch (err) {
         console.error("Error al registrar cliente persona usando el SP:", err);
         throw err;
     }
+    
 };
 
 // Función para insertar teléfonos
