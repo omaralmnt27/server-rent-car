@@ -28,7 +28,15 @@ router.post('/', async (req, res) => {
             pais_origen
         );
 
-        insertDatosAdicionales(personaId,telefonos,documentos,direcciones)
+        try {
+            await insertDatosAdicionales(personaId, telefonos, documentos, direcciones);
+        } catch (error) {
+            console.error("Error al insertar datos adicionales:", error);
+            return res.status(500).json({ 
+                error: 'Cliente registrado, pero hubo un error al insertar datos adicionales', 
+                id_persona: personaId 
+            });
+        }
 
         return res.status(200).json({ message: 'Cliente registrado correctamente', id_persona: personaId });
     } catch (error) {
