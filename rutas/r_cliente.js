@@ -25,6 +25,8 @@ router.post('/', async (req, res) => {
             pais_origen
         );
 
+        insertDatosAdicionales(PersonaId, telefonos, direcciones);
+
         return res.status(200).json({ message: 'Cliente registrado correctamente', id_persona: personaId });
     } catch (error) {
         console.error("Error al registrar cliente:", error);
