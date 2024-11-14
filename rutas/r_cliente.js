@@ -1,41 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const { insertClientePersona,insertDatosAdicionales, insertClienteEmpresa, updateClienteEmpresa, updateClientePersona, updateDatosAdicionales, insertTelefonos, insertDocumentos, insertDirecciones, getClientes, getClienteById } = require('../bd/tablas/cliente');
+const { insertClientePersona,insertDatosAdicionales, updateClientePersona, updateDatosAdicionales, insertTelefonos, insertDocumentos, insertDirecciones, getClientes, getClienteById } = require('../bd/tablas/cliente');
 
 // Ruta para registrar cliente
 router.post('/', async (req, res) => {
     const {
-        tipo_cliente,
         nombre,
         apellido,
         fecha_nacimiento,
         sexo,
-        nombre_empresa,
         telefonos,
         documentos,
         direcciones,
-        id_tipo_entidad,
         pais_origen
     } = req.body;
 
     console.log("Datos recibidos en el servidor:", req.body);
 
     try {
-        let entidadId;
+        let personaId;
 
-        // Insertar según el tipo de entidad
-        if (id_tipo_entidad === 1) { // Cliente persona
-            entidadId = await insertClientePersona(nombre, apellido, fecha_nacimiento, sexo, id_tipo_entidad, pais_origen);
-        } else if (id_tipo_entidad === 2) { // Cliente empresa
-            entidadId = await insertClienteEmpresa(nombre_empresa, id_tipo_entidad, pais_origen);
-        } else {
-            return res.status(400).json({ error: 'Tipo de entidad no válido' });
-        }
-
+         personaId = await insertClientePersona(nombre, apellido, fecha_nacimiento, sexo, pais_origen);
+      
         // Inserta los datos adicionales
-        await insertDatosAdicionales(entidadId, telefonos, documentos, direcciones);
+        await insertDatosAdicionales(personaId, telefonos, documentos, direcciones);
 
-        return res.status(200).json({ message: 'Cliente registrado correctamente', id_entidad: entidadId });
+        return res.status(200).json({ message: 'Cliente registrado correctamente' });
     } catch (error) {
         console.error("Error al registrar cliente:", error);
         return res.status(500).json({ error: `Error en el servidor: ${error.message}` });
