@@ -380,6 +380,7 @@ async function getTiposDocumento() {
 async function updateDatosAdicionales(entidadId, telefonos, documentos, direcciones) {
     // Obtener los tipos de teléfono y crear un mapa
     const tiposTelefonoMap = await getTiposTelefono();
+    const tiposDocumentoMap = await getTiposDocumento(); // Asumo que esta función existe para obtener tipos de documentos
 
     // Actualizar teléfonos usando el stored procedure
     if (telefonos && telefonos.length > 0) {
@@ -405,7 +406,7 @@ async function updateDatosAdicionales(entidadId, telefonos, documentos, direccio
         }
     }
 
-    // Actualizar documentos (Placeholder para futura implementación)
+    // Actualizar documentos
     if (documentos && documentos.length > 0) {
         for (const documento of documentos) {
             // Convertir la descripción del tipo de documento en su ID
@@ -437,11 +438,14 @@ async function updateDatosAdicionales(entidadId, telefonos, documentos, direccio
                 console.error(`Error al actualizar documento para entidad ${entidadId}:`, error);
             }
         }
+    }
+
     // Actualizar direcciones (Placeholder para futura implementación)
     if (direcciones && direcciones.length > 0) {
         console.log('Direcciones recibidas, pero aún no se manejan:', direcciones);
     }
 }
+
 
 
  
