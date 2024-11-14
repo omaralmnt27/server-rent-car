@@ -48,6 +48,14 @@ const insertDatosAdicionales = async (personaId, telefonos, documentos, direccio
 // Función para insertar un cliente
 
 const insertClientePersona = async (nombre, apellido, fecha_nacimiento, sexo, correo, id_pais) => {
+
+    console.log("Cliente:")
+    console.log(nombre)
+    console.log(apellido)
+    console.log(fecha_nacimiento)
+    console.log(sexo)
+    console.log(correo)
+    console.log(id_pais)
     try {
         // Llamar al stored procedure para insertar cliente
         await pool.query(
