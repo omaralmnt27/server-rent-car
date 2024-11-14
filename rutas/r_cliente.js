@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
             pais_origen
         );
 
-        insertDatosAdicionales(PersonaId, telefonos, direcciones);
+        insertDatosAdicionales(personaId, telefonos, direcciones);
 
         return res.status(200).json({ message: 'Cliente registrado correctamente', id_persona: personaId });
     } catch (error) {
