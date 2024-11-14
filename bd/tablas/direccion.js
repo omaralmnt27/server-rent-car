@@ -2,7 +2,7 @@ const pool = require('../conexion');
 
 const getTipoDireccionEntidad = async (req, res) => {
   try {
-    const result = await pool.query('SELECT id_tipo_direccion_entidad AS id, descripcion FROM tipo_direccion_entidad');
+    const result = await pool.query('SELECT id_tipo_direccion_persona AS id, descripcion FROM tipo_direccion_persona');
     res.status(200).json(result.rows); 
   } catch (error) {
     console.error("Error al obtener tipos de direccion:", error);
