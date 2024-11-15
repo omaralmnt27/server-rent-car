@@ -164,55 +164,62 @@ const insertDirecciones = async (entidadId, direcciones) => {
 const getClientes = async () => {
     try {
       const result = await pool.query(`
-SELECT 
-    e.id_entidad AS id,
-    p.nombre,
-    p.apellido,
-    p.fecha_nacimiento,
-    
-    -- Concatenar todos los teléfonos junto con su tipo en una sola cadena
-    COALESCE(
-        string_agg(DISTINCT t.telefono || ' (' || tt.descripcion || ')', ', '), 
-        '-') AS telefonos,
-
-    -- Concatenar todos los documentos en una cadena simplificada
-    COALESCE(
-        string_agg(
-            DISTINCT d.numeracion || ' (' || 
-            COALESCE(td.descripcion, 'Desconocido') || ', ' || 
-            COALESCE(d.fecha_emision::text, 'Desconocida') || ', ' ||
-            COALESCE(d.fecha_vencimiento::text, 'Desconocida') || ', ' ||
-            COALESCE(pais.descripcion, 'Desconocido') || ')'
-        , ', '), 
-        '-') AS documentos
-
-FROM entidad e
-LEFT JOIN pais pa ON pa.id_pais = e.id_pais
-INNER JOIN cliente c ON c.id_entidad = e.id_entidad
-INNER JOIN persona p ON p.id_entidad = e.id_entidad
-LEFT JOIN telefono t ON t.id_entidad = e.id_entidad
-LEFT JOIN tipo_telefono tt ON t.id_tipo_telefono = tt.id_tipo_telefono
-LEFT JOIN documento d ON d.id_entidad = e.id_entidad
-LEFT JOIN tipo_documento td ON td.id_tipo_documento = d.id_tipo_documento
-LEFT JOIN pais ON d.id_pais = pais.id_pais
-
--- Agrupar por los campos de entidad, persona y país de la entidad
-GROUP BY 
-    e.id_entidad, 
-    p.nombre, 
-    p.apellido, 
-    p.fecha_nacimiento,
-	pa.descripcion
-ORDER BY 
-    e.id_entidad;
-
+        SELECT 
+          p.id_persona AS id,
+          p.nombre,
+          p.apellido,
+          p.fecha_nacimiento,
+          p.correo,
+          p.sexo,
+          p.pais_descripcion,
+  
+          COALESCE(
+            string_agg(DISTINCT vt.telefono || ' (' || vt.tipo_telefono || ')', ', '), 
+            '-') AS telefonos,
+  
+          COALESCE(
+            string_agg(
+              DISTINCT vd.numeracion || ' (' || 
+              COALESCE(vd.tipo_documento, 'Desconocido') || ', ' || 
+              COALESCE(vd.fecha_emision::text, 'Desconocida') || ', ' ||
+              COALESCE(vd.fecha_vencimiento::text, 'Desconocida') || ', ' ||
+              COALESCE(vd.pais_descripcion, 'Desconocido') || ')', 
+            ', '), 
+            '-') AS documentos,
+  
+          COALESCE(
+            string_agg(
+              DISTINCT vd.lineauno || ' ' || 
+              COALESCE(vd.lineados, '') || ' (' || 
+              COALESCE(vd.tipo_direccion, 'Desconocido') || ', ' ||
+              COALESCE(vd.estado, 'Desconocido') || ', ' ||
+              COALESCE(vd.pais_descripcion, 'Desconocido') || ')', 
+            ', '), 
+            '-') AS direcciones
+  
+        FROM vw_personas_clientes p
+        LEFT JOIN vw_telefonos_persona vt ON vt.id_persona = p.id_persona
+        LEFT JOIN vw_documentos_persona vd ON vd.id_persona = p.id_persona
+        LEFT JOIN vw_direcciones_persona vd ON vd.id_persona = p.id_persona
+  
+        GROUP BY 
+          p.id_persona, 
+          p.nombre, 
+          p.apellido, 
+          p.fecha_nacimiento,
+          p.correo,
+          p.sexo,
+          p.pais_descripcion
+        ORDER BY p.id_persona;
       `);
+  
       return result.rows;
     } catch (error) {
       console.error("Error al obtener clientes:", error);
       throw error;
     }
   };
+  
 
 // Obtener un cliente por su ID
 const getClienteById = async (id) => {
